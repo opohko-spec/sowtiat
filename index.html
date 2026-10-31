@@ -1,412 +1,253 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SwoAbod - المنصة الصوتية الاحترافية</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Cairo', sans-serif; background-color: #0b0716; color: #ffffff; touch-action: manipulation; }
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: #150e26; }
-        ::-webkit-scrollbar-thumb { background: #8b5cf6; border-radius: 10px; }
-        .glass-box { background: rgba(22, 14, 38, 0.95); backdrop-filter: blur(14px); border: 1px solid rgba(139, 92, 246, 0.35); }
-        .tab-btn.active { color: #ec4899; border-top: 2px solid #ec4899; background: rgba(236, 72, 153, 0.1); }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#100e1c">
+<title>عبودswo | ABOUDSWO</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
+*{box-sizing:border-box}
+body{margin:0;background:#100e1c;color:white;font-family:Cairo,sans-serif}
+header{padding:17px;background:#1b172b;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:5;border-bottom:1px solid #39304d}
+.brand{font-size:24px;font-weight:800;color:#c29aff}
+.coins{background:#30243f;padding:8px 13px;border-radius:20px;color:#f4d47e}
+main{max-width:600px;margin:auto;padding:16px 14px 90px}
+.page{display:none}.page.active{display:block}
+.hero{padding:25px;border-radius:22px;background:linear-gradient(135deg,#7044ad,#292044);margin-bottom:20px}
+.hero h2{margin:0 0 8px}.hero p{font-size:13px;color:#e0d5f1}
+h3{font-size:17px;margin:22px 0 12px}
+.card{background:#201c30;border:1px solid #393149;border-radius:17px;padding:14px;margin:10px 0}
+.row{display:flex;align-items:center;gap:12px}
+.icon{width:48px;height:48px;border-radius:15px;background:#493363;display:grid;place-items:center;font-size:23px}
+.grow{flex:1}.small{font-size:12px;color:#aaa3bd}
+button{border:0;border-radius:12px;padding:10px 15px;background:#9561df;color:white;font-family:inherit;font-weight:bold}
+button:disabled{opacity:.5}
+.room{cursor:pointer}
+.room:active{transform:scale(.98)}
+nav{position:fixed;bottom:0;left:0;right:0;background:#1b172b;border-top:1px solid #39304d;display:flex;justify-content:space-around;padding:10px 3px;z-index:10}
+nav button{background:transparent;color:#aaa3bd;padding:5px;font-size:11px}
+nav button.active{color:#c29aff}
+nav span{display:block;font-size:20px}
+input{background:#302a40;color:white;border:1px solid #55476d;border-radius:12px;padding:12px;width:100%;font:inherit}
+.seats{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin:20px 0}
+.seat{text-align:center;background:#29243b;padding:14px 4px;border-radius:16px;font-size:12px}
+.avatar{width:48px;height:48px;border-radius:50%;background:#50376f;margin:auto auto 7px;display:grid;place-items:center;font-size:22px}
+.center{text-align:center}
+.notice{position:fixed;top:75px;left:10px;right:10px;background:#483365;padding:13px;border-radius:12px;text-align:center;display:none;z-index:20}
+</style>
 </head>
-<body class="bg-[#0b0716] min-h-screen flex flex-col justify-between p-3 select-none">
+<body>
+<header>
+ <div class="brand">👑 عبودswo</div>
+ <div class="coins">🪙 <span id="coins">250</span></div>
+</header>
 
-    <!-- NAME LOGIN MODAL -->
-    <div id="auth-screen" class="fixed inset-0 bg-black/95 backdrop-blur-md z-50 flex items-center justify-center p-4">
-        <div class="glass-box w-full max-w-sm rounded-3xl p-6 space-y-4 text-center shadow-2xl">
-            <div class="w-20 h-20 rounded-full bg-gradient-to-tr from-purple-600 via-pink-500 to-amber-400 flex items-center justify-center mx-auto text-3xl text-white shadow-xl">
-                <i class="fa-solid fa-microphone-lines"></i>
-            </div>
-            <div>
-                <h2 class="font-black text-xl text-white">SwoAbod الصوتي 🎙️</h2>
-                <p class="text-xs text-purple-300 mt-1">أدخل اسمك المستعار للدخول الفوري للغرفة</p>
-            </div>
-            <div class="space-y-3 text-right">
-                <input type="text" id="reg-name" value="عبود" class="w-full bg-purple-950/80 border-2 border-pink-500 rounded-xl py-3 px-3 text-sm text-white focus:outline-none text-center font-black">
-            </div>
-            <button id="login-btn" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-black text-xs py-3.5 rounded-xl shadow-lg transition active:scale-95 cursor-pointer">
-                دخول المنصة وتفعيل الصوت 🚀
-            </button>
-        </div>
-    </div>
+<div class="notice" id="notice"></div>
 
-    <!-- HEADER -->
-    <header class="glass-box rounded-2xl p-3 flex items-center justify-between shadow-xl">
-        <div class="flex items-center gap-3">
-            <div class="relative">
-                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150" class="w-11 h-11 rounded-full border-2 border-purple-500 object-cover">
-                <span id="my-badge" class="absolute -bottom-1 -right-1 bg-amber-400 text-[8px] px-1 text-black font-black rounded-full">عضو</span>
-            </div>
-            <div>
-                <div class="flex items-center gap-1.5">
-                    <span id="my-name" class="font-bold text-xs text-white">زائر</span>
-                    <span id="my-id" class="text-[9px] bg-purple-950 text-purple-300 px-1.5 py-0.2 rounded-full border border-purple-800">#0000</span>
-                </div>
-                <div class="flex items-center gap-1 text-[11px] text-amber-400 mt-0.5 font-bold">
-                    <i class="fa-solid fa-coins text-[10px]"></i>
-                    <span id="my-coins">1,000</span> كوينز
-                </div>
-            </div>
-        </div>
-        <button onclick="alert('منصة SwoAbod مجهزة بالكامل لعبود!')" class="bg-gradient-to-r from-amber-500 to-red-600 text-white font-bold text-[11px] px-3 py-1.5 rounded-xl shadow flex items-center gap-1">
-            <i class="fa-solid fa-crown"></i> الإدارة
-        </button>
-    </header>
-    <!-- 1. TAB: ROOMS -->
-    <main id="tab-rooms" class="flex-1 space-y-3 mt-3">
-        <div class="bg-gradient-to-r from-purple-900 to-indigo-900 rounded-2xl p-4 flex justify-between items-center shadow-xl border border-purple-500/30">
-            <div>
-                <h3 class="font-black text-xs text-white">غرفة المالك الرسمية (عبود) 🔥</h3>
-                <p class="text-[10px] text-purple-200 mt-0.5">غرفة المالك الأساسية مع الروبوتات المتكلمة سارة ولين</p>
-            </div>
-            <button onclick="enterRoom('غرفة المالك الرسمية (عبود)', '9088')" class="bg-gradient-to-r from-pink-500 to-purple-600 px-4 py-2 rounded-xl text-xs font-bold shadow text-white hover:scale-105 transition">
-                دخول الغرفة
-            </button>
-        </div>
+<main>
 
-        <div class="glass-box rounded-2xl p-3 flex justify-between items-center">
-            <div>
-                <h4 class="font-bold text-xs text-white">إنشاء غرفة خاصة جديدة 🏠</h4>
-                <p class="text-[10px] text-purple-300">أنشئ غرفتك الخاصة برقم ID مميز</p>
-            </div>
-            <button onclick="createNewPrivateRoom()" class="bg-purple-600 text-white text-xs font-bold px-3.5 py-2 rounded-xl shadow">
-                + إنشاؤها
-            </button>
-        </div>
-    </main>
+<section class="page active" id="home">
+ <div class="hero">
+  <h2>أهلاً بك في عبودswo ❤️</h2>
+  <p>عالم يجمعنا… وصوت يوصلنا</p>
+  <button onclick="go('rooms')">اكتشف الغرف 🎧</button>
+ </div>
 
-    <!-- ACTIVE ROOM VIEW -->
-    <main id="view-active-room" class="flex-1 space-y-3 mt-2 hidden">
-        <div class="glass-box rounded-xl p-2.5 flex justify-between items-center">
-            <div class="flex items-center gap-2">
-                <button onclick="leaveActiveRoom()" class="text-gray-300 hover:text-white px-1">
-                    <i class="fa-solid fa-chevron-right text-xs"></i>
-                </button>
-                <div>
-                    <h4 id="active-room-name" class="font-bold text-xs text-white">غرفة المالك</h4>
-                    <span class="text-[9px] text-purple-300" id="active-room-id">ID: 9088</span>
-                </div>
-            </div>
-            <button onclick="leaveActiveRoom()" class="bg-red-500/20 text-red-300 border border-red-500/40 text-[10px] px-3 py-1 rounded-lg font-bold">خروج</button>
-        </div>
+ <h3>🎁 مكافأة الدخول اليومي</h3>
+ <div class="card row">
+  <div class="icon">🎁</div>
+  <div class="grow">
+   <b>هدية اليوم</b>
+   <div class="small">احصل على 20 كوين يومياً</div>
+  </div>
+  <button id="reward" onclick="claim()">استلام</button>
+ </div>
 
-        <!-- 8 Microphones Grid -->
-        <div class="glass-box rounded-2xl p-3 shadow-lg">
-            <div class="flex justify-between items-center mb-2">
-                <span class="text-[10px] text-purple-300 font-bold flex items-center gap-1">
-                    <i class="fa-solid fa-microphone-lines text-pink-400"></i> المقاعد الـ 8 النشطة
-                </span>
-                <button onclick="requestMic()" class="bg-gradient-to-r from-pink-500 to-purple-600 text-white text-[10px] px-3 py-1 rounded-lg font-bold shadow">
-                    <i class="fa-solid fa-hand-holding"></i> طلب مايك ✋
-                </button>
-            </div>
-            <div class="grid grid-cols-4 gap-2 text-center" id="mic-grid"></div>
-        </div>
+ <h3>🎧 الغرف الصوتية المميزة</h3>
+ <div id="homeRooms"></div>
 
-        <!-- Live Online Users -->
-        <div class="glass-box rounded-2xl p-2.5 shadow-lg">
-            <h4 class="font-bold text-[11px] text-purple-300 mb-1.5 flex justify-between">
-                <span><i class="fa-solid fa-users text-pink-400"></i> المتواجدون بالروم</span>
-                <span id="online-count" class="text-[9px] bg-purple-900 text-purple-200 px-2 py-0.5 rounded-full">1 متصل</span>
-            </h4>
-            <div id="online-users-list" class="flex gap-2 overflow-x-auto pb-1"></div>
-        </div>
+ <h3>🎉 الأحداث والمناسبات</h3>
+ <div class="card">🏆 مسابقة المعلومات - قريباً</div>
+ <div class="card">🎤 ليلة المواهب - قريباً</div>
+ <div class="card">🎊 حفلة نهاية الأسبوع</div>
+</section>
 
-        <!-- Room Live Chat & AI Voice Bots -->
-        <div class="glass-box rounded-xl p-3 flex flex-col justify-between h-36 shadow-lg">
-            <div class="overflow-y-auto space-y-1.5 pr-1 text-[11px]" id="room-chat">
-                <div class="text-[9px] text-center text-purple-400 bg-purple-950/40 py-0.5 rounded">🤖 الروبوتات سارة ولين تتحدثان صوتياً وترحبان بالضيوف!</div>
-            </div>
-            <div class="mt-2 flex gap-1.5">
-                <input type="text" id="chat-input" placeholder="اكتب رسالتك للروبوتات..." class="flex-1 bg-purple-950/60 text-xs rounded-xl py-1.5 px-3 border border-purple-800 text-white focus:outline-none">
-                <button onclick="sendChatMessage()" class="bg-purple-600 text-white px-3.5 py-1.5 rounded-xl text-xs font-bold">إرسال</button>
-            </div>
-        </div>
-    </main>
+<section class="page" id="rooms">
+ <h2>🎧 الغرف الصوتية</h2>
+ <p class="small">اختر غرفتك المفضلة</p>
+ <button onclick="notify('إنشاء الغرف يحتاج إلى تفعيل الخادم')">＋ إنشاء غرفة</button>
+ <div id="allRooms"></div>
+</section>
 
-    <!-- 2. TAB: MOMENTS -->
-    <main id="tab-moments" class="flex-1 space-y-3 mt-3 hidden">
-        <div class="glass-box rounded-2xl p-3 flex justify-between items-center shadow-lg">
-            <div>
-                <h4 class="font-bold text-xs text-white">لحظات المجتمع (صور وفيديوهات) 📸🎥</h4>
-                <p class="text-[10px] text-purple-300">متاح لأي شخص النشر والتفاعل بحرية تامة</p>
-            </div>
-            <button onclick="openPublishModal()" class="bg-gradient-to-r from-pink-500 to-purple-600 text-white text-xs font-bold px-3.5 py-2 rounded-xl shadow">
-                + نشر لحظة
-            </button>
-        </div>
-        <div id="moments-feed" class="space-y-3"></div>
-    </main>
+<section class="page" id="room">
+ <button onclick="go('rooms')">رجوع ←</button>
+ <div class="center">
+  <div class="avatar" style="width:85px;height:85px;font-size:38px;margin-top:20px">🎙️</div>
+  <h2 id="roomTitle">سهرة الأصدقاء</h2>
+  <p class="small" id="roomHost"></p>
+ </div>
+ <h3>مقاعد الغرفة</h3>
+ <div class="seats" id="seats"></div>
+ <p class="small center">واجهة تجريبية - الصوت المباشر يحتاج خدمة صوتية وخادماً.</p>
+ <div class="row" style="justify-content:center;flex-wrap:wrap">
+  <button onclick="notify('الميكروفون يحتاج تفعيل الصوت المباشر')">🎙️ المايك</button>
+  <button onclick="notify('تم إرسال طلب رفع اليد تجريبياً')">✋ رفع اليد</button>
+  <button onclick="notify('الهدايا ستضاف مع المتجر')">🎁 هدية</button>
+  <button onclick="go('rooms')" style="background:#9d354b">☎ خروج</button>
+ </div>
+</section>
 
-    <!-- PUBLISH POST MODAL -->
-    <div id="publish-modal" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="glass-box w-full max-w-sm rounded-3xl p-5 space-y-3 shadow-2xl text-right">
-            <h3 class="font-black text-sm text-white text-center">نشر صورة أو فيديو جديد 🎬</h3>
-            <div>
-                <label class="text-[10px] text-purple-300 block mb-1 font-bold">ماذا يدور في ذهنك؟</label>
-                <textarea id="post-text" placeholder="اكتب وصف المنشور..." class="w-full bg-purple-950/60 border border-purple-700/50 rounded-xl p-2.5 text-xs text-white focus:outline-none h-20"></textarea>
-            </div>
-            <div>
-                <label class="text-[10px] text-purple-300 block mb-1 font-bold">رابط الصورة أو الفيديو (URL):</label>
-                <input type="text" id="post-media" placeholder="ضع رابط الصورة أو الفيديو هنا..." class="w-full bg-purple-950/60 border border-purple-700/50 rounded-xl py-2 px-3 text-xs text-white focus:outline-none">
-            </div>
-            <div class="flex gap-2 pt-2">
-                <button onclick="submitNewPost()" class="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold text-xs py-2.5 rounded-xl shadow">نشر فوري</button>
-                <button onclick="closePublishModal()" class="bg-gray-700 text-white font-bold text-xs py-2.5 px-4 rounded-xl">إلغاء</button>
-            </div>
-        </div>
-    </div>
+<section class="page" id="messages">
+ <h2>✉ الرسائل</h2>
+ <div class="card" onclick="chat('إدارة عبودswo')">📢 إدارة عبودswo <div class="small">رسائل النظام والإعلانات</div></div>
+ <div class="card" onclick="chat('نجم الليل')">🌟 نجم الليل <div class="small">أهلاً بك</div></div>
+ <div class="card" onclick="chat('الأميرة')">👑 الأميرة <div class="small">مرحباً</div></div>
+ <div class="small">المحادثات في هذه النسخة تجريبية ومحلية.</div>
+</section>
 
-    <!-- 3. TAB: MESSAGES -->
-    <main id="tab-messages" class="flex-1 space-y-3 mt-3 hidden">
-        <div class="glass-box rounded-2xl p-4 text-center space-y-2 shadow-lg">
-            <i class="fa-solid fa-comments text-3xl text-pink-400"></i>
-            <h4 class="font-bold text-xs text-white">الرسائل الخاصة</h4>
-            <p class="text-[10px] text-purple-300">تواصل خاص مع أعضاء المنصة بكل مرونة.</p>
-        </div>
-    </main>
+<section class="page" id="chat">
+ <button onclick="go('messages')">رجوع ←</button>
+ <h2 id="chatTitle">المحادثة</h2>
+ <div class="card" id="chatMessages" style="min-height:250px"></div>
+ <div class="row">
+  <input id="message" placeholder="اكتب رسالتك...">
+  <button onclick="send()">إرسال</button>
+ </div>
+</section>
 
-    <!-- 4. TAB: PROFILE -->
-    <main id="tab-profile" class="flex-1 space-y-3 mt-3 hidden">
-        <div class="glass-box rounded-2xl p-4 text-center space-y-3 shadow-lg">
-            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150" class="w-16 h-16 rounded-full border-2 border-pink-500 mx-auto object-cover">
-            <div>
-                <h4 id="profile-name" class="font-black text-sm text-white">زائر</h4>
-                <span id="profile-id" class="text-[10px] text-purple-300">#0000</span>
-            </div>
-            <button onclick="logoutApp()" class="w-full bg-red-500/20 text-red-300 border border-red-500/40 text-xs py-2.5 rounded-xl font-bold">
-                تسجيل الخروج
-            </button>
-        </div>
-    </main>
+<section class="page" id="events">
+ <h2>🎉 الأحداث والمناسبات</h2>
+ <div class="card">🏆 مسابقة المعلومات <p class="small">مسابقات وجوائز</p></div>
+ <div class="card">🎤 ليلة المواهب <p class="small">أظهر موهبتك أمام الجميع</p></div>
+ <div class="card">🎊 احتفالات ومناسبات أسبوعية</div>
+</section>
 
-    <!-- BOTTOM NAVIGATION BAR -->
-    <nav class="glass-box py-2 px-4 flex justify-around items-center rounded-2xl mt-3 shadow-2xl">
-        <button onclick="switchTab('rooms')" id="nav-rooms" class="tab-btn active flex flex-col items-center gap-0.5 text-xs px-3 py-1 rounded-xl transition">
-            <i class="fa-solid fa-house text-sm"></i>
-            <span class="text-[9px] font-bold">الرئيسية</span>
-        </button>
-        <button onclick="switchTab('moments')" id="nav-moments" class="tab-btn flex flex-col items-center gap-0.5 text-gray-400 text-xs px-3 py-1 rounded-xl transition">
-            <i class="fa-solid fa-photo-film text-sm"></i>
-            <span class="text-[9px] font-bold">اللحظات</span>
-        </button>
-        <button onclick="switchTab('messages')" id="nav-messages" class="tab-btn flex flex-col items-center gap-0.5 text-gray-400 text-xs px-3 py-1 rounded-xl transition">
-            <i class="fa-solid fa-comments text-sm"></i>
-            <span class="text-[9px] font-bold">الرسائل</span>
-        </button>
-        <button onclick="switchTab('profile')" id="nav-profile" class="tab-btn flex flex-col items-center gap-0.5 text-gray-400 text-xs px-3 py-1 rounded-xl transition">
-            <i class="fa-solid fa-user text-sm"></i>
-            <span class="text-[9px] font-bold">حسابي</span>
-        </button>
-    </nav>
+<section class="page" id="profile">
+ <div class="center">
+  <h2>حسابي الشخصي</h2>
+  <div class="avatar" style="width:90px;height:90px;font-size:40px">👤</div>
+  <h3>مستخدم عبودswo</h3>
+  <p class="small">ID: 1000001</p>
+ </div>
+ <div class="card">⭐ المستوى: 1</div>
+ <div class="card">💎 الماسات: 0</div>
+ <div class="card">👑 VIP: غير مشترك</div>
+ <div class="card">👨‍👩‍👧 العائلة: غير منضم</div>
+ <div class="card">🎁 الهدايا: 0</div>
+ <div class="card" onclick="notify('الإعدادات قيد التطوير')">⚙️ الإعدادات</div>
+ <div class="card" onclick="notify('لوحة الإدارة تحتاج خادماً آمناً')">🛡️ لوحة الإدارة</div>
+</section>
 
-    <!-- SCRIPT ENGINE -->
-    <script>
-        var myUser = { name: "", id: "", coins: 1000, isAdmin: false };
-        var micSeats = [
-            { seatNum: 1, name: "عبود (المالك)", avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150", active: true, type: "owner" },
-            { seatNum: 2, name: "🤖 سارة (مضيفة)", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150", active: true, type: "bot" },
-            { seatNum: 3, name: "🤖 لين (مضيفة)", avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150", active: true, type: "bot" },
-            { seatNum: 4, name: "خالي", avatar: "", active: false, type: "empty" },
-            { seatNum: 5, name: "خالي", avatar: "", active: false, type: "empty" },
-            { seatNum: 6, name: "خالي", avatar: "", active: false, type: "empty" },
-            { seatNum: 7, name: "خالي", avatar: "", active: false, type: "empty" },
-            { seatNum: 8, name: "خالي", avatar: "", active: false, type: "empty" }
-        ];
+</main>
 
-        window.onload = function() {
-            document.getElementById('login-btn').addEventListener('click', loginWithName);
-            document.getElementById('login-btn').addEventListener('touchstart', loginWithName);
+<nav>
+ <button class="active" onclick="go('home',this)"><span>⌂</span>الرئيسية</button>
+ <button onclick="go('rooms',this)"><span>🎧</span>الغرف</button>
+ <button onclick="go('messages',this)"><span>✉</span>الرسائل</button>
+ <button onclick="go('events',this)"><span>🎉</span>الأحداث</button>
+ <button onclick="go('profile',this)"><span>👤</span>حسابي</button>
+</nav>
 
-            var savedName = localStorage.getItem('swo_name_only');
-            if(savedName) {
-                myUser.name = savedName;
-                myUser.id = localStorage.getItem('swo_id_only');
-                myUser.coins = parseInt(localStorage.getItem('swo_coins_only')) || 1000;
-                myUser.isAdmin = localStorage.getItem('swo_admin_only') === 'true';
-                document.getElementById('auth-screen').classList.add('hidden');
-                updateUI();
-                registerOnlinePresence();
-            }
-            loadMomentsPosts();
-            startSyncLoop();
-        };
+<script>
+const rooms=[
+ ['سهرة الأصدقاء','عبودswo','دردشة عامة','128','🎙️'],
+ ['ليلة الطرب','نجم الليل','موسيقى','86','🎵'],
+ ['تعارف وصداقات','الأميرة','تعارف','54','💜'],
+ ['تحدي المعلومات','الذيب','مسابقات','42','🏆'],
+ ['مجلس السوالف','أبو علي','مجلس عربي','31','☕']
+];
 
-        function loginWithName() {
-            let nameVal = document.getElementById('reg-name').value.trim();
-            if(!nameVal) { alert("أدخل اسمك أولاً!"); return; }
+let coins=Number(localStorage.getItem('as_coins')||250);
 
-            myUser.name = nameVal;
-            if(nameVal.includes("عبود") || nameVal.includes("عبد السلام") || nameVal.includes("abod")) {
-                myUser.isAdmin = true;
-                myUser.id = "#ABOD99";
-                myUser.coins = 50000;
-            } else {
-                myUser.isAdmin = false;
-                myUser.id = "#" + Math.floor(1000 + Math.random() * 9000);
-                myUser.coins = 1000;
-            }
+function updateCoins(){
+ document.getElementById('coins').textContent=coins;
+}
 
-            localStorage.setItem('swo_name_only', myUser.name);
-            localStorage.setItem('swo_id_only', myUser.id);
-            localStorage.setItem('swo_coins_only', myUser.coins);
-            localStorage.setItem('swo_admin_only', myUser.isAdmin);
+function notify(t){
+ const n=document.getElementById('notice');
+ n.textContent=t;
+ n.style.display='block';
+ clearTimeout(window.timer);
+ window.timer=setTimeout(()=>n.style.display='none',2500);
+}
 
-            document.getElementById('auth-screen').classList.add('hidden');
-            updateUI();
-            registerOnlinePresence();
-            triggerAIBotWelcome(myUser.name);
-            enterRoom('غرفة المالك الرسمية (عبود)', '9088');
-        }
+function go(id,btn){
+ document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+ document.getElementById(id).classList.add('active');
+ document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));
+ if(btn)btn.classList.add('active');
+ else{
+  const pages=['home','rooms','messages','events','profile'];
+  const i=pages.indexOf(id);
+  if(i>=0)document.querySelectorAll('nav button')[i].classList.add('active');
+ }
+ window.scrollTo(0,0);
+}
 
-        function updateUI() {
-            document.getElementById('my-name').innerText = myUser.name;
-            document.getElementById('my-id').innerText = myUser.id;
-            document.getElementById('my-coins').innerText = myUser.coins.toLocaleString();
-            document.getElementById('my-badge').innerText = myUser.isAdmin ? "مدير" : "عضو";
-            document.getElementById('profile-name').innerText = myUser.name;
-            document.getElementById('profile-id').innerText = myUser.id;
-        }
+function makeRoom(r){
+ return `<div class="card row room" onclick="openRoom('${r[0]}')">
+ <div class="icon">${r[4]}</div>
+ <div class="grow"><b>${r[0]}</b>
+ <div class="small">${r[2]} • المضيف: ${r[1]}</div></div>
+ <div class="small">👥 ${r[3]}</div></div>`;
+}
 
-        function speakText(text) {
-            if ('speechSynthesis' in window) {
-                let utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = 'ar-SA';
-                utterance.rate = 1.0;
-                window.speechSynthesis.speak(utterance);
-            }
-        }
+document.getElementById('homeRooms').innerHTML=rooms.slice(0,3).map(makeRoom).join('');
+document.getElementById('allRooms').innerHTML=rooms.map(makeRoom).join('');
 
-        function switchTab(tab) {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active', 'text-pink-500'));
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.add('text-gray-400'));
-            
-            document.getElementById('tab-rooms').classList.add('hidden');
-            document.getElementById('tab-moments').classList.add('hidden');
-            document.getElementById('tab-messages').classList.add('hidden');
-            document.getElementById('tab-profile').classList.add('hidden');
-            document.getElementById('view-active-room').classList.add('hidden');
+function openRoom(name){
+ const r=rooms.find(x=>x[0]===name);
+ document.getElementById('roomTitle').textContent=r[0];
+ document.getElementById('roomHost').textContent='المضيف: '+r[1]+' • المستمعون: '+r[3];
+ document.getElementById('seats').innerHTML=['المضيف','مقعد 2','مقعد 3','مقعد 4','مقعد 5','مقعد 6'].map((s,i)=>`<div class="seat"><div class="avatar">${i===0?'👑':'👤'}</div>${s}</div>`).join('');
+ go('room');
+}
 
-            if(tab === 'rooms') {
-                document.getElementById('tab-rooms').classList.remove('hidden');
-                document.getElementById('nav-rooms').classList.add('active', 'text-pink-500');
-            } else if(tab === 'moments') {
-                document.getElementById('tab-moments').classList.remove('hidden');
-                document.getElementById('nav-moments').classList.add('active', 'text-pink-500');
-            } else if(tab === 'messages') {
-                document.getElementById('tab-messages').classList.remove('hidden');
-                document.getElementById('nav-messages').classList.add('active', 'text-pink-500');
-            } else if(tab === 'profile') {
-                document.getElementById('tab-profile').classList.remove('hidden');
-                document.getElementById('nav-profile').classList.add('active', 'text-pink-500');
-            }
-        }
+function claim(){
+ const today=new Date().toLocaleDateString();
+ if(localStorage.getItem('as_reward')===today){
+  notify('استلمت مكافأة اليوم بالفعل');
+  return;
+ }
+ coins+=20;
+ localStorage.setItem('as_coins',coins);
+ localStorage.setItem('as_reward',today);
+ updateCoins();
+ document.getElementById('reward').disabled=true;
+ document.getElementById('reward').textContent='تم الاستلام';
+ notify('مبروك! حصلت على 20 كوين 🎁');
+}
 
-        function enterRoom(roomName, roomId) {
-            document.getElementById('tab-rooms').classList.add('hidden');
-            document.getElementById('view-active-room').classList.remove('hidden');
-            document.getElementById('active-room-name').innerText = roomName;
-            document.getElementById('active-room-id').innerText = "ID: " + roomId;
-            renderMicGrid();
-            renderOnlineUsers();
-        }
+function initReward(){
+ if(localStorage.getItem('as_reward')===new Date().toLocaleDateString()){
+  document.getElementById('reward').disabled=true;
+  document.getElementById('reward').textContent='تم الاستلام';
+ }
+}
 
-        function leaveActiveRoom() {
-            document.getElementById('view-active-room').classList.add('hidden');
-            document.getElementById('tab-rooms').classList.remove('hidden');
-        }
+let current='';
+function chat(name){
+ current=name;
+ document.getElementById('chatTitle').textContent=name;
+ document.getElementById('chatMessages').innerHTML='<div class="small">مرحباً بك في عبودswo 👋</div>';
+ go('chat');
+}
 
-        function createNewPrivateRoom() {
-            let roomTitle = prompt("أدخل اسم غرفتك الخاصة:");
-            if(!roomTitle) return;
-            let randomId = Math.floor(1000 + Math.random() * 9000);
-            enterRoom(roomTitle, randomId);
-        }
+function send(){
+ const input=document.getElementById('message');
+ const value=input.value.trim();
+ if(!value)return;
+ const line=document.createElement('div');
+ line.style.cssText='background:#493363;padding:10px;border-radius:12px;margin:9px 0';
+ line.textContent=value;
+ document.getElementById('chatMessages').appendChild(line);
+ input.value='';
+ notify('رسالة تجريبية محفوظة على الشاشة فقط');
+}
 
-        function renderMicGrid() {
-            var grid = document.getElementById('mic-grid');
-            grid.innerHTML = '';
-            for(var i=0; i<micSeats.length; i++) {
-                var s = micSeats[i];
-                if(s.active) {
-                    grid.innerHTML += `
-                        <div class="bg-purple-950/40 p-2 rounded-xl border border-purple-800/40 flex flex-col items-center">
-                            <div class="w-full bg-gray-800 h-1 rounded-full mb-1"></div>
-                            <img src="${s.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150'}" class="w-9 h-9 rounded-full border ${s.type === 'bot' ? 'border-pink-400' : 'border-purple-400'} object-cover">
-                            <span class="text-[9px] font-bold text-white mt-1 truncate w-full">${s.name}</span>
-                            <span class="text-[8px] text-pink-400 font-bold">${s.type === 'bot' ? 'روبوت متكلم 🎙️' : 'يتحدث'}</span>
-                        </div>
-                    `;
-                } else {
-                    grid.innerHTML += `
-                        <div onclick="requestMic()" class="bg-purple-950/20 p-2 rounded-xl border border-dashed border-purple-700/50 flex flex-col items-center cursor-pointer hover:bg-purple-900/30 transition">
-                            <div class="w-full bg-gray-800 h-1 rounded-full mb-1"></div>
-                            <div class="w-9 h-9 rounded-full bg-purple-900/50 border border-purple-600 flex items-center justify-center text-pink-400 text-sm font-black shadow">
-                                <i class="fa-solid fa-plus"></i>
-                            </div>
-                            <span class="text-[9px] font-bold text-gray-300 mt-1">مايك ${i+1}</span>
-                            <span class="text-[8px] text-emerald-400 font-bold">اضغط للطلب</span>
-                        </div>
-                    `;
-                }
-            }
-        }
-
-        function registerOnlinePresence() {
-            var users = JSON.parse(localStorage.getItem('swo_online_all') || '[]');
-            users = users.filter(u => u.id !== myUser.id);
-            users.push({ name: myUser.name, id: myUser.id, avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150" });
-            localStorage.setItem('swo_online_all', JSON.stringify(users));
-        }
-
-        function renderOnlineUsers() {
-            var listDiv = document.getElementById('online-users-list');
-            var users = JSON.parse(localStorage.getItem('swo_online_all') || '[]');
-            document.getElementById('online-count').innerText = users.length + " متصل";
-            
-            listDiv.innerHTML = '';
-            for(var i=0; i<users.length; i++) {
-                var u = users[i];
-                listDiv.innerHTML += `
-                    <div class="flex flex-col items-center flex-shrink-0 bg-purple-900/30 p-2 rounded-xl border border-purple-700/40 w-16">
-                        <img src="${u.avatar}" class="w-9 h-9 rounded-full border border-pink-500 object-cover">
-                        <span class="text-[9px] font-bold text-white mt-1 truncate w-full text-center">${u.name}</span>
-                        <button onclick="inviteToMic('${u.name}')" class="mt-1 bg-pink-600 text-white text-[7px] px-1.5 py-0.5 rounded">صعده</button>
-                    </div>
-                `;
-            }
-        }
-
-        function requestMic() {
-            var msgs = JSON.parse(localStorage.getItem('swo_chat_msgs') || '[]');
-            msgs.push({ name: "النظام", text: "✋ العضو " + myUser.name + " يطلب الصعود للمايك!" });
-            localStorage.setItem('swo_chat_msgs', JSON.stringify(msgs));
-            alert("تم إرسال طلبك للمايك بنجاح!");
-        }
-
-        function inviteToMic(username) {
-            for(var i=0; i<micSeats.length; i++) {
-                if(!micSeats[i].active) {
-                    micSeats[i].name = username;
-                    micSeats[i].active = true;
-                    micSeats[i].type = "guest";
-                    break;
-                }
-            }
-            renderMicGrid();
-            let voiceText = "تم صعود العضو " + username + " إلى المايك بجوارنا";
-            speakText(voiceText);
-            var msgs = JSON.parse(localStorage.getItem('swo_chat_msgs') || '[]');
-            msgs.push({ name: "المالك عبود", text: "🎙️ تم صعود " + username + " إلى المايك!" });
-            localStorage.setItem('swo_chat_msgs', JSON.stringify(msgs));
-        }
-
-        function triggerAIBotWelcome(username) {
-            let welcomeMsg = "هلا والله منورنا يا " + username + " في غرف
+updateCoins();
+initReward();
+</script>
+</body>
+</html>
