@@ -18,7 +18,7 @@
 </head>
 <body class="bg-[#0b0716] min-h-screen flex flex-col justify-between p-3 select-none">
 
-    <!-- NAME LOGIN MODAL (تم تصحيح الحقل والزر ليعملان فوراً) -->
+    <!-- NAME LOGIN MODAL -->
     <div id="auth-screen" class="fixed inset-0 bg-black/95 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="glass-box w-full max-w-sm rounded-3xl p-6 space-y-4 text-center shadow-2xl">
             <div class="w-20 h-20 rounded-full bg-gradient-to-tr from-purple-600 via-pink-500 to-amber-400 flex items-center justify-center mx-auto text-3xl text-white shadow-xl">
@@ -31,7 +31,7 @@
             <div class="space-y-3 text-right">
                 <input type="text" id="reg-name" value="عبود" class="w-full bg-purple-950/80 border-2 border-pink-500 rounded-xl py-3 px-3 text-sm text-white focus:outline-none text-center font-black">
             </div>
-            <button onclick="loginWithName()" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-black text-xs py-3.5 rounded-xl shadow-lg transition active:scale-95">
+            <button id="login-btn" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-black text-xs py-3.5 rounded-xl shadow-lg transition active:scale-95 cursor-pointer">
                 دخول المنصة وتفعيل الصوت 🚀
             </button>
         </div>
@@ -222,6 +222,9 @@
         ];
 
         window.onload = function() {
+            document.getElementById('login-btn').addEventListener('click', loginWithName);
+            document.getElementById('login-btn').addEventListener('touchstart', loginWithName);
+
             var savedName = localStorage.getItem('swo_name_only');
             if(savedName) {
                 myUser.name = savedName;
@@ -406,7 +409,4 @@
         }
 
         function triggerAIBotWelcome(username) {
-            let welcomeMsg = "هلا والله منورنا يا " + username + " في غرفة المالك عبود! نورتنا وشرفتنا";
-            speakText(welcomeMsg);
-            var msgs = JSON.parse(localStorage.getItem('swo_chat_msgs') || '[]');
-            msgs.push({ name: "🤖 سارة"
+            let welcomeMsg = "هلا والله منورنا يا " + username + " في غرف
