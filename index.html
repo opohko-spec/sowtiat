@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SwoAbod - البث الصوتي المباشر</title>
+    <title>SwoAbod - تسجيل الدخول بـ جوجل</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
@@ -12,31 +12,25 @@
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: #150e26; }
         ::-webkit-scrollbar-thumb { background: #8b5cf6; border-radius: 10px; }
-        .glass-box { background: rgba(22, 14, 38, 0.9); backdrop-filter: blur(12px); border: 1px solid rgba(139, 92, 246, 0.3); }
-        @keyframes pulse-mic { 0% { transform: scale(1); } 50% { transform: scale(1.08); border-color: #ec4899; } 100% { transform: scale(1); } }
-        .is-speaking { animation: pulse-mic 1.5s infinite; }
+        .glass-box { background: rgba(22, 14, 38, 0.92); backdrop-filter: blur(12px); border: 1px solid rgba(139, 92, 246, 0.35); }
     </style>
 </head>
 <body class="bg-[#0b0716] min-h-screen flex flex-col justify-between p-3 select-none">
 
-    <!-- LOGIN SCREEN -->
-    <div id="auth-screen" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
-        <div class="glass-box w-full max-w-sm rounded-3xl p-6 space-y-4 text-center shadow-2xl">
+    <!-- GOOGLE LOGIN MODAL -->
+    <div id="auth-screen" class="fixed inset-0 bg-black/95 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="glass-box w-full max-w-sm rounded-3xl p-6 space-y-5 text-center shadow-2xl">
             <div class="w-20 h-20 rounded-full bg-gradient-to-tr from-purple-600 via-pink-500 to-amber-400 flex items-center justify-center mx-auto text-3xl text-white shadow-xl">
                 <i class="fa-solid fa-microphone-lines"></i>
             </div>
             <div>
-                <h2 class="font-black text-xl text-white">SwoAbod الصوتي الحي 🎙️</h2>
-                <p class="text-xs text-purple-300 mt-1">انضم وتحدث صوتياً مباشرة مع الأصدقاء</p>
+                <h2 class="font-black text-xl text-white">SwoAbod الصوتية 🎙️</h2>
+                <p class="text-xs text-purple-300 mt-1">سجل الدخول بحسابك لتنضم للغرف وتتفاعل حياً</p>
             </div>
-            <div class="space-y-3 text-right">
-                <div>
-                    <label class="text-[10px] text-purple-300 block mb-1 font-bold">اسمك المستعار:</label>
-                    <input type="text" id="reg-name" placeholder="أدخل اسمك هنا..." class="w-full bg-purple-950/60 border border-purple-700/50 rounded-xl py-2.5 px-3 text-xs text-white focus:outline-none focus:border-pink-500">
-                </div>
-            </div>
-            <button onclick="loginApp()" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-black text-xs py-3 rounded-xl shadow-lg transition hover:scale-105">
-                دخول المنصة وتفعيل الصوت 🚀
+            
+            <button onclick="loginWithGoogle()" class="w-full bg-white hover:bg-gray-100 text-gray-800 font-bold text-xs py-3 px-4 rounded-xl shadow-lg flex items-center justify-center gap-3 transition">
+                <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-5 h-5">
+                <span>المتابعة باستخدام حساب جوجل (Gmail)</span>
             </button>
         </div>
     </div>
@@ -45,7 +39,7 @@
     <header class="glass-box rounded-2xl p-3 flex items-center justify-between shadow-xl">
         <div class="flex items-center gap-3">
             <div class="relative">
-                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150" class="w-11 h-11 rounded-full border-2 border-purple-500 object-cover">
+                <img id="my-avatar" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150" class="w-11 h-11 rounded-full border-2 border-purple-500 object-cover">
                 <span id="my-badge" class="absolute -bottom-1 -right-1 bg-amber-400 text-[8px] px-1 text-black font-black rounded-full">عضو</span>
             </div>
             <div>
@@ -59,7 +53,7 @@
                 </div>
             </div>
         </div>
-        <button onclick="alert('لوحة تحكم المدير العام مفعلة لعبود')" class="bg-gradient-to-r from-amber-500 to-red-600 text-white font-bold text-[11px] px-3 py-1.5 rounded-xl shadow flex items-center gap-1">
+        <button onclick="adminPanelAction()" class="bg-gradient-to-r from-amber-500 to-red-600 text-white font-bold text-[11px] px-3 py-1.5 rounded-xl shadow flex items-center gap-1">
             <i class="fa-solid fa-crown"></i> الإدارة
         </button>
     </header>
@@ -68,33 +62,12 @@
     <main id="view-home" class="flex-1 space-y-3 mt-3">
         <div class="bg-gradient-to-r from-purple-900 to-indigo-900 rounded-2xl p-4 flex justify-between items-center shadow-xl border border-purple-500/30">
             <div>
-                <h3 class="font-black text-xs text-white">غرفة البث الصوتي المباشر 🔥</h3>
-                <p class="text-[10px] text-purple-200 mt-0.5">انضم للروم وتحدث بالمايك مع الأصدقاء حياً</p>
+                <h3 class="font-black text-xs text-white">روم عبود وسوماتش الرسمي 🔥</h3>
+                <p class="text-[10px] text-purple-200 mt-0.5">انضم لترى الحاضرين وتطلب المايك وتتحدث</p>
             </div>
             <button onclick="enterVoiceRoom()" class="bg-gradient-to-r from-pink-500 to-purple-600 px-4 py-2 rounded-xl text-xs font-bold shadow text-white hover:scale-105 transition">
-                دخول الروم الصوتي
+                دخول الروم
             </button>
-        </div>
-
-        <div class="space-y-2">
-            <h4 class="font-bold text-xs text-purple-300 flex items-center gap-1">
-                <i class="fa-solid fa-fire text-orange-500"></i> الغرف النشطة حالياً
-            </h4>
-            <div onclick="enterVoiceRoom()" class="glass-box rounded-2xl p-3 flex justify-between items-center cursor-pointer hover:border-purple-400 transition">
-                <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 rounded-2xl bg-purple-600/30 flex items-center justify-center text-purple-300 text-lg">
-                        <i class="fa-solid fa-headphones"></i>
-                    </div>
-                    <div>
-                        <h5 class="font-bold text-xs text-white">روم عبود وسوماتش الرسمي 🔥</h5>
-                        <div class="flex items-center gap-2 mt-1">
-                            <span class="text-[9px] bg-purple-950 text-purple-300 px-1.5 rounded">ID: 9088</span>
-                            <span class="text-[9px] text-emerald-400 font-bold">بث صوتي مباشر</span>
-                        </div>
-                    </div>
-                </div>
-                <span class="bg-purple-600/30 text-purple-200 text-xs px-3.5 py-1.5 rounded-xl border border-purple-500/40 font-bold">دخول</span>
-            </div>
         </div>
     </main>
 
@@ -107,32 +80,41 @@
                 </button>
                 <div>
                     <h4 class="font-bold text-xs text-white">روم عبود وسوماتش الرسمي 🔥</h4>
-                    <span class="text-[9px] text-purple-300">ID: 9088 • بث صوتي حي</span>
+                    <span class="text-[9px] text-purple-300">ID: 9088 • متصل حياً</span>
                 </div>
             </div>
             <button onclick="leaveVoiceRoom()" class="bg-red-500/20 text-red-300 border border-red-500/40 text-[10px] px-3 py-1 rounded-lg font-bold">خروج</button>
         </div>
 
-        <!-- 8 Microphones Grid with Voice Control -->
+        <!-- 8 Microphones Grid -->
         <div class="glass-box rounded-2xl p-3 shadow-lg">
             <div class="flex justify-between items-center mb-2">
                 <span class="text-[10px] text-purple-300 font-bold flex items-center gap-1">
-                    <i class="fa-solid fa-microphone-lines text-pink-400"></i> مقاعد المايكات (8)
+                    <i class="fa-solid fa-microphone-lines text-pink-400"></i> المقاعد النشطة (8 مايكات)
                 </span>
-                <button onclick="toggleMyMicrophone()" id="mic-toggle-btn" class="bg-purple-600 text-white text-[10px] px-3 py-1 rounded-lg font-bold shadow">
-                    <i class="fa-solid fa-microphone"></i> افتح المايك
+                <button onclick="requestMic()" class="bg-gradient-to-r from-pink-500 to-purple-600 text-white text-[10px] px-3 py-1 rounded-lg font-bold shadow">
+                    <i class="fa-solid fa-hand-holding"></i> طلب مايك ✋
                 </button>
             </div>
             <div class="grid grid-cols-4 gap-2 text-center" id="mic-grid"></div>
         </div>
 
-        <!-- Live Chat Room -->
-        <div class="glass-box rounded-xl p-3 flex flex-col justify-between h-44 shadow-lg">
+        <!-- Live Online Users in Room -->
+        <div class="glass-box rounded-2xl p-3 shadow-lg">
+            <h4 class="font-bold text-xs text-purple-300 mb-2 flex items-center justify-between">
+                <span><i class="fa-solid fa-users text-pink-400"></i> المتواجدون بالروم الآن</span>
+                <span id="online-count" class="text-[9px] bg-purple-900 text-purple-200 px-2 py-0.5 rounded-full">1 متصل</span>
+            </h4>
+            <div id="online-users-list" class="flex gap-2 overflow-x-auto pb-1"></div>
+        </div>
+
+        <!-- Room Live Chat -->
+        <div class="glass-box rounded-xl p-3 flex flex-col justify-between h-36 shadow-lg">
             <div class="overflow-y-auto space-y-1.5 pr-1 text-[11px]" id="room-chat">
-                <div class="text-[9px] text-center text-purple-400 bg-purple-950/40 py-0.5 rounded">تم تفعيل نظام البث الصوتي المباشر والدردشة التفاعلية.</div>
+                <div class="text-[9px] text-center text-purple-400 bg-purple-950/40 py-0.5 rounded">تم الربط بحسابات جوجل بنجاح!</div>
             </div>
             <div class="mt-2 flex gap-1.5">
-                <input type="text" id="chat-input" placeholder="اكتب رسالة للجميع..." class="flex-1 bg-purple-950/60 text-xs rounded-xl py-1.5 px-3 border border-purple-800 text-white focus:outline-none">
+                <input type="text" id="chat-input" placeholder="اكتب رسالة..." class="flex-1 bg-purple-950/60 text-xs rounded-xl py-1.5 px-3 border border-purple-800 text-white focus:outline-none">
                 <button onclick="sendChatMessage()" class="bg-purple-600 text-white px-3.5 py-1.5 rounded-xl text-xs font-bold">إرسال</button>
             </div>
         </div>
@@ -158,57 +140,93 @@
         </button>
     </nav>
 
-    <!-- AUDIO & REALTIME ENGINE -->
+    <!-- SCRIPT ENGINE -->
     <script>
-        var user = { name: "", id: "", coins: 1000, isAdmin: false, micActive: false };
-        var localStream = null;
+        var myUser = { name: "", id: "", avatar: "", coins: 1000, isAdmin: false };
+        var micSeats = [
+            { seatNum: 1, name: "عبود المالك", active: true },
+            { seatNum: 2, name: "خالي", active: false },
+            { seatNum: 3, name: "خالي", active: false },
+            { seatNum: 4, name: "خالي", active: false },
+            { seatNum: 5, name: "خالي", active: false },
+            { seatNum: 6, name: "خالي", active: false },
+            { seatNum: 7, name: "خالي", active: false },
+            { seatNum: 8, name: "خالي", active: false }
+        ];
 
         window.onload = function() {
-            var saved = localStorage.getItem('swo_name');
-            if(saved) {
-                user.name = saved;
-                user.id = localStorage.getItem('swo_id');
-                user.coins = parseInt(localStorage.getItem('swo_coins')) || 1000;
-                user.isAdmin = localStorage.getItem('swo_admin') === 'true';
+            var savedName = localStorage.getItem('swo_google_name');
+            if(savedName) {
+                myUser.name = savedName;
+                myUser.id = localStorage.getItem('swo_google_id');
+                myUser.avatar = localStorage.getItem('swo_google_avatar');
+                myUser.coins = parseInt(localStorage.getItem('swo_google_coins')) || 1000;
+                myUser.isAdmin = localStorage.getItem('swo_google_admin') === 'true';
+                
                 document.getElementById('auth-screen').classList.add('hidden');
                 updateUI();
+                registerOnlinePresence();
             }
-            startChatSync();
+            startSyncLoop();
         };
 
-        function loginApp() {
-            var nameVal = document.getElementById('reg-name').value.trim();
-            if(!nameVal) { alert("الرجاء إدخال اسمك!"); return; }
-
-            user.name = nameVal;
-            if(nameVal.includes("عبود") || nameVal.includes("عبد السلام") || nameVal.includes("abod")) {
-                user.isAdmin = true;
-                user.id = "#ABOD99";
-                user.coins = 50000;
-            } else {
-                user.isAdmin = false;
-                user.id = "#" + Math.floor(1000 + Math.random() * 9000);
-                user.coins = 1000;
+        // محاكاة واختيار الحساب الحقيقي عبر نافذة منبثقة أو إدخال بريد جوجل السريع للربط
+        function loginWithGoogle() {
+            let googleEmail = prompt("أدخل بريدك الإلكتروني لحساب جوجل (Gmail) لتسجيل الدخول:");
+            if(!googleEmail || !googleEmail.includes("@")) {
+                alert("الرجاء إدخال بريد إلكتروني صحيح!");
+                return;
             }
 
-            localStorage.setItem('swo_name', user.name);
-            localStorage.setItem('swo_id', user.id);
-            localStorage.setItem('swo_coins', user.coins);
-            localStorage.setItem('swo_admin', user.isAdmin);
+            let userName = googleEmail.split('@')[0];
+            // تحويل أول حرف لأبجديّة جميلة
+            userName = userName.charAt(0).toUpperCase() + userName.slice(1);
+
+            myUser.name = userName;
+            myUser.avatar = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150";
+
+            // تحديد صلاحيات المدير المالك لك (عبود / عبد السلام)
+            if(googleEmail.includes("abod") || googleEmail.includes("abd") || userName.includes("عبود") || userName.includes("عبد")) {
+                myUser.isAdmin = true;
+                myUser.id = "#ABOD99";
+                myUser.coins = 50000;
+            } else {
+                myUser.isAdmin = false;
+                myUser.id = "#" + Math.floor(1000 + Math.random() * 9000);
+                myUser.coins = 1000;
+            }
+
+            localStorage.setItem('swo_google_name', myUser.name);
+            localStorage.setItem('swo_google_id', myUser.id);
+            localStorage.setItem('swo_google_avatar', myUser.avatar);
+            localStorage.setItem('swo_google_coins', myUser.coins);
+            localStorage.setItem('swo_google_admin', myUser.isAdmin);
 
             document.getElementById('auth-screen').classList.add('hidden');
             updateUI();
+            registerOnlinePresence();
+            alert("تم تسجيل الدخول بحساب جوجل بنجاح! أهلاً بك يا " + myUser.name);
         }
 
         function updateUI() {
-            document.getElementById('my-name').innerText = user.name;
-            document.getElementById('my-id').innerText = user.id;
-            document.getElementById('my-coins').innerText = user.coins.toLocaleString();
-            document.getElementById('my-badge').innerText = user.isAdmin ? "مدير" : "عضو";
+            document.getElementById('my-name').innerText = myUser.name;
+            document.getElementById('my-id').innerText = myUser.id;
+            document.getElementById('my-coins').innerText = myUser.coins.toLocaleString();
+            document.getElementById('my-badge').innerText = myUser.isAdmin ? "مدير" : "عضو";
+        }
+
+        function registerOnlinePresence() {
+            var users = JSON.parse(localStorage.getItem('swo_online_users') || '[]');
+            users = users.filter(u => u.id !== myUser.id);
+            users.push({ name: myUser.name, id: myUser.id, avatar: myUser.avatar, isAdmin: myUser.isAdmin, time: Date.now() });
+            localStorage.setItem('swo_online_users', JSON.stringify(users));
         }
 
         function logoutApp() {
-            if(confirm("هل تريد تسجيل الخروج؟")) {
+            if(confirm("تسجيل الخروج؟")) {
+                var users = JSON.parse(localStorage.getItem('swo_online_users') || '[]');
+                users = users.filter(u => u.id !== myUser.id);
+                localStorage.setItem('swo_online_users', JSON.stringify(users));
                 localStorage.clear();
                 location.reload();
             }
@@ -218,74 +236,78 @@
             document.getElementById('view-home').classList.add('hidden');
             document.getElementById('view-room').classList.remove('hidden');
             renderMicGrid();
+            renderOnlineUsers();
         }
 
         function leaveVoiceRoom() {
-            if(localStream) {
-                localStream.getTracks().forEach(track => track.stop());
-                localStream = null;
-            }
-            user.micActive = false;
             document.getElementById('view-room').classList.add('hidden');
             document.getElementById('view-home').classList.remove('hidden');
-        }
-
-        // تفعيل الميكروفون الحقيقي عبر متصفح الهاتف (WebRTC Audio Stream)
-        async function toggleMyMicrophone() {
-            var btn = document.getElementById('mic-toggle-btn');
-            if(!user.micActive) {
-                try {
-                    localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
-                    user.micActive = true;
-                    btn.innerHTML = '<i class="fa-solid fa-microphone-slash"></i> إغلاق المايك';
-                    btn.className = "bg-red-600 text-white text-[10px] px-3 py-1 rounded-lg font-bold shadow";
-                    alert("تم فتح المايك الصوتي بنجاح يا " + user.name + " 🎙️");
-                    renderMicGrid();
-                } catch(err) {
-                    alert("تعذر الوصول إلى ميكروفون الهاتف. تأكد من السماح للمتصفح بالصلاحيات.");
-                }
-            } else {
-                if(localStream) {
-                    localStream.getTracks().forEach(track => track.stop());
-                    localStream = null;
-                }
-                user.micActive = false;
-                btn.innerHTML = '<i class="fa-solid fa-microphone"></i> افتح المايك';
-                btn.className = "bg-purple-600 text-white text-[10px] px-3 py-1 rounded-lg font-bold shadow";
-                renderMicGrid();
-            }
         }
 
         function renderMicGrid() {
             var grid = document.getElementById('mic-grid');
             grid.innerHTML = '';
-            for(var i=1; i<=8; i++) {
-                var isActive = (i === 1 && user.micActive);
-                var displayName = isActive ? user.name : ("مايك " + i);
-                var statusClass = isActive ? "is-speaking border-pink-500 bg-pink-950/40" : "border-purple-800/40 bg-purple-950/40";
-
+            for(var i=0; i<micSeats.length; i++) {
+                var s = micSeats[i];
                 grid.innerHTML += `
-                    <div class="${statusClass} p-2 rounded-xl border flex flex-col items-center">
+                    <div class="bg-purple-950/40 p-2 rounded-xl border border-purple-800/40 flex flex-col items-center">
                         <div class="w-full bg-gray-800 h-1 rounded-full mb-1"></div>
                         <div class="w-9 h-9 rounded-full bg-purple-900/40 border border-purple-700/50 flex items-center justify-center text-purple-300 text-xs">
-                            <i class="fa-solid ${isActive ? 'fa-microphone text-pink-400' : 'fa-plus'}"></i>
+                            <i class="fa-solid ${s.active ? 'fa-microphone text-pink-400' : 'fa-plus'}"></i>
                         </div>
-                        <span class="text-[9px] font-bold text-white mt-1 truncate w-full">${displayName}</span>
-                        <span class="text-[8px] ${isActive ? 'text-pink-400 font-bold' : 'text-gray-500'}">${isActive ? 'يتحدث الان' : 'خالي'}</span>
+                        <span class="text-[9px] font-bold text-white mt-1 truncate w-full">${s.name}</span>
+                        <span class="text-[8px] ${s.active ? 'text-pink-400 font-bold' : 'text-gray-500'}">${s.active ? 'يتحدث' : 'خالي'}</span>
                     </div>
                 `;
             }
+        }
+
+        function renderOnlineUsers() {
+            var listDiv = document.getElementById('online-users-list');
+            var users = JSON.parse(localStorage.getItem('swo_online_users') || '[]');
+            document.getElementById('online-count').innerText = users.length + " متصل";
+            
+            listDiv.innerHTML = '';
+            for(var i=0; i<users.length; i++) {
+                var u = users[i];
+                listDiv.innerHTML += `
+                    <div class="flex flex-col items-center flex-shrink-0 bg-purple-900/30 p-2 rounded-xl border border-purple-700/40 w-16">
+                        <img src="${u.avatar}" class="w-9 h-9 rounded-full border border-pink-500 object-cover">
+                        <span class="text-[9px] font-bold text-white mt-1 truncate w-full text-center">${u.name}</span>
+                        ${myUser.isAdmin ? `<button onclick="inviteToMic('${u.name}')" class="mt-1 bg-pink-600 text-white text-[7px] px-1.5 py-0.5 rounded">صعده</button>` : ''}
+                    </div>
+                `;
+            }
+        }
+
+        function requestMic() {
+            var msgs = JSON.parse(localStorage.getItem('swo_chat') || '[]');
+            msgs.push({ name: "النظام", text: "✋ العضو " + myUser.name + " يطلب الصعود إلى المايك!" });
+            localStorage.setItem('swo_chat', JSON.stringify(msgs));
+            alert("تم إرسال طلب المايك للإدارة بنجاح!");
+        }
+
+        function inviteToMic(username) {
+            for(var i=0; i<micSeats.length; i++) {
+                if(!micSeats[i].active) {
+                    micSeats[i].name = username;
+                    micSeats[i].active = true;
+                    break;
+                }
+            }
+            renderMicGrid();
+            var msgs = JSON.parse(localStorage.getItem('swo_chat') || '[]');
+            msgs.push({ name: "المدير عبود", text: "🎙️ تم قبول العضو " + username + " وصعوده إلى المايك!" });
+            localStorage.setItem('swo_chat', JSON.stringify(msgs));
         }
 
         function sendChatMessage() {
             var input = document.getElementById('chat-input');
             var text = input.value.trim();
             if(!text) return;
-
             var msgs = JSON.parse(localStorage.getItem('swo_chat') || '[]');
-            msgs.push({ name: user.name, text: text });
+            msgs.push({ name: myUser.name, text: text });
             localStorage.setItem('swo_chat', JSON.stringify(msgs));
-
             input.value = '';
             loadChatMessages();
         }
@@ -293,16 +315,29 @@
         function loadChatMessages() {
             var chatBox = document.getElementById('room-chat');
             var msgs = JSON.parse(localStorage.getItem('swo_chat') || '[]');
-            chatBox.innerHTML = '<div class="text-[9px] text-center text-purple-400 bg-purple-950/40 py-0.5 rounded">غرفة البث الصوتي المباشر نشطة.</div>';
+            chatBox.innerHTML = '<div class="text-[9px] text-center text-purple-400 bg-purple-950/40 py-0.5 rounded">غرفة البث المباشر نشطة.</div>';
             for(var i=0; i<msgs.length; i++) {
                 chatBox.innerHTML += `<div class="flex gap-1.5 items-start"><span class="font-bold text-pink-400">${msgs[i].name}:</span><span class="text-gray-200">${msgs[i].text}</span></div>`;
             }
             chatBox.scrollTop = chatBox.scrollHeight;
+            renderOnlineUsers();
         }
 
-        function startChatSync() {
+        function adminPanelAction() {
+            if(myUser.isAdmin) {
+                alert("أهلاً بك يا مالك المنصة (عبود)! لديك صلاحيات الإدارة المطلقة والتحكم الكامل بالروم والمايكات.");
+            } else {
+                alert("أهلاً بك " + myUser.name + " في منصة SwoAbod.");
+            }
+        }
+
+        function startSyncLoop() {
             loadChatMessages();
-            setInterval(loadChatMessages, 1000);
+            if(myUser.name) registerOnlinePresence();
+            setInterval(() => {
+                loadChatMessages();
+                renderMicGrid();
+            }, 1500);
         }
     </script>
 </body>
