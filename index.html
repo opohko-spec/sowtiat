@@ -16,29 +16,54 @@
 </head>
 <body class="bg-[#0f0c1b] min-h-screen flex flex-col justify-between p-3 select-none">
 
+    <!-- LOGIN / REGISTRATION SCREEN (يظهر للمستخدم الجديد فقط) -->
+    <div id="login-modal" class="fixed inset-0 bg-[#0f0c1b] z-50 flex items-center justify-center p-4">
+        <div class="bg-[#18132a] border border-purple-500/40 w-full max-w-sm rounded-3xl p-6 space-y-4 shadow-2xl text-center">
+            <div class="w-16 h-16 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center mx-auto text-2xl text-white shadow-lg">
+                <i class="fa-solid fa-microphone-lines"></i>
+            </div>
+            <div>
+                <h2 class="font-black text-lg text-white">مرحباً بك في SwoAbod</h2>
+                <p class="text-xs text-purple-300 mt-1">أنشئ حسابك الخاص لتنضم للغرف وتتحدث بحرية</p>
+            </div>
+            <div class="space-y-3 text-right">
+                <div>
+                    <label class="text-[10px] text-gray-400 block mb-1">اسمك المستعار:</label>
+                    <input type="text" id="reg-name" placeholder="أدخل اسمك هنا..." class="w-full bg-purple-950/60 border border-purple-800 rounded-xl py-2 px-3 text-xs text-white focus:outline-none">
+                </div>
+                <div>
+                    <label class="text-[10px] text-gray-400 block mb-1">رابط صورتك الشخصية (اختياري):</label>
+                    <input type="text" id="reg-avatar" value="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150" class="w-full bg-purple-950/60 border border-purple-800 rounded-xl py-2 px-3 text-xs text-white focus:outline-none">
+                </div>
+            </div>
+            <button onclick="registerUser()" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold text-xs py-3 rounded-xl shadow-lg mt-2">
+                دخول المنصة 🚀
+            </button>
+        </div>
+    </div>
+
     <!-- Top Navigation Header -->
     <header class="bg-[#18132a] border border-purple-900/40 rounded-2xl p-3 flex items-center justify-between shadow-lg">
         <div class="flex items-center gap-2.5">
             <div class="relative">
-                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150" class="w-10 h-10 rounded-full border-2 border-purple-500 object-cover">
-                <span class="absolute -bottom-1 -right-1 bg-amber-400 text-[8px] px-1 text-black font-black rounded-full">مدير</span>
+                <img id="header-avatar" src="" class="w-10 h-10 rounded-full border-2 border-purple-500 object-cover">
+                <span class="absolute -bottom-1 -right-1 bg-amber-400 text-[8px] px-1 text-black font-black rounded-full" id="header-badge">عضو</span>
             </div>
             <div>
                 <div class="flex items-center gap-1.5">
-                    <span class="font-bold text-xs text-white">عبود المالك</span>
-                    <span class="text-[9px] bg-purple-950 text-purple-300 px-1.5 py-0.2 rounded-full border border-purple-800">#ABOD99</span>
+                    <span id="header-name" class="font-bold text-xs text-white">زائر</span>
+                    <span id="header-id" class="text-[9px] bg-purple-950 text-purple-300 px-1.5 py-0.2 rounded-full border border-purple-800">#0000</span>
                 </div>
                 <div class="flex items-center gap-1 text-[11px] text-amber-400 mt-0.5 font-bold">
                     <i class="fa-solid fa-coins text-[9px]"></i>
-                    <span id="user-coins">50,000</span> كوِنز
+                    <span id="user-coins">1,000</span> كوِنز
                 </div>
             </div>
         </div>
-        <button onclick="alert('أهلاً بك يا عبد السلام، أنت المدير العام وتتحكم بكافة صلاحيات المنصة!')" class="bg-gradient-to-r from-amber-500 to-red-600 text-white font-bold text-[11px] px-3 py-1.5 rounded-xl shadow flex items-center gap-1">
+        <button onclick="checkAdminAccess()" class="bg-gradient-to-r from-amber-500 to-red-600 text-white font-bold text-[11px] px-3 py-1.5 rounded-xl shadow flex items-center gap-1">
             <i class="fa-solid fa-crown"></i> الدارة
         </button>
     </header>
-
     <!-- MAIN VIEW 1: HOME / ROOMS LIST -->
     <main id="view-home" class="flex-1 space-y-3 mt-3">
         <div class="bg-gradient-to-r from-purple-900 to-indigo-900 rounded-2xl p-4 flex justify-between items-center shadow-lg border border-purple-500/30">
@@ -46,7 +71,7 @@
                 <h3 class="font-bold text-xs text-white">افتح رومك الصوتي الآن 🎙️</h3>
                 <p class="text-[10px] text-purple-200 mt-0.5">تحدث بحرية بصوت عالٍ مع أصدقائك</p>
             </div>
-            <button onclick="enterRoom('غرفة عبود الخاصة 🔥', 9088)" class="bg-gradient-to-r from-pink-500 to-purple-600 px-3.5 py-2 rounded-xl text-xs font-bold shadow text-white">
+            <button onclick="enterRoom('غرفة المستخدم الخاصة 🔥', Math.floor(1000 + Math.random() * 9000))" class="bg-gradient-to-r from-pink-500 to-purple-600 px-3.5 py-2 rounded-xl text-xs font-bold shadow text-white">
                 إنشاء غرفة
             </button>
         </div>
@@ -56,13 +81,13 @@
                 <i class="fa-solid fa-fire text-orange-500"></i> الغرف النشطة حالياً
             </h4>
 
-            <div onclick="enterRoom('روم عبود وسوماتش الرسمي 🔥', 9088)" class="bg-[#18132a] border border-purple-900/40 rounded-xl p-3 flex justify-between items-center cursor-pointer hover:border-purple-500 transition">
+            <div onclick="enterRoom('روم سوو عبود الرسمي 🔥', 9088)" class="bg-[#18132a] border border-purple-900/40 rounded-xl p-3 flex justify-between items-center cursor-pointer hover:border-purple-500 transition">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-xl bg-purple-600/30 flex items-center justify-center text-purple-300">
                         <i class="fa-solid fa-headphones"></i>
                     </div>
                     <div>
-                        <h5 class="font-bold text-xs text-white">روم عبود وسوماتش الرسمي 🔥</h5>
+                        <h5 class="font-bold text-xs text-white">روم سوو عبود الرسمي 🔥</h5>
                         <div class="flex items-center gap-2 mt-0.5">
                             <span class="text-[9px] bg-purple-950 text-purple-300 px-1.5 rounded">ID: 9088</span>
                             <span class="text-[9px] text-emerald-400 font-bold">18 متواجد الآن</span>
@@ -71,24 +96,9 @@
                 </div>
                 <span class="bg-purple-600/20 text-purple-300 text-xs px-3 py-1 rounded-lg border border-purple-600/40 font-bold">دخول</span>
             </div>
-
-            <div onclick="enterRoom('جلسة شعر وشيلات 🎤', 4021)" class="bg-[#18132a] border border-purple-900/40 rounded-xl p-3 flex justify-between items-center cursor-pointer hover:border-purple-500 transition">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-amber-600/30 flex items-center justify-center text-amber-300">
-                        <i class="fa-solid fa-microphone"></i>
-                    </div>
-                    <div>
-                        <h5 class="font-bold text-xs text-white">جلسة شعر وشيلات 🎤</h5>
-                        <div class="flex items-center gap-2 mt-0.5">
-                            <span class="text-[9px] bg-purple-950 text-purple-300 px-1.5 rounded">ID: 4021</span>
-                            <span class="text-[9px] text-emerald-400 font-bold">12 متواجد الآن</span>
-                        </div>
-                    </div>
-                </div>
-                <span class="bg-purple-600/20 text-purple-300 text-xs px-3 py-1 rounded-lg border border-purple-600/40 font-bold">دخول</span>
-            </div>
         </div>
     </main>
+
     <!-- MAIN VIEW 2: ACTIVE VOICE ROOM -->
     <main id="view-room" class="flex-1 space-y-3 mt-2 hidden">
         <div class="bg-[#18132a] rounded-xl p-2.5 border border-purple-800/40 flex justify-between items-center">
@@ -97,8 +107,8 @@
                     <i class="fa-solid fa-chevron-right text-xs"></i>
                 </button>
                 <div>
-                    <h4 id="room-title-text" class="font-bold text-xs text-white">روم عبود وسوماتش الرسمي 🔥</h4>
-                    <span class="text-[9px] text-purple-300">ID: 9088 • مشرف غرفة الصوت</span>
+                    <h4 id="room-title-text" class="font-bold text-xs text-white">روم سوو عبود الرسمي 🔥</h4>
+                    <span class="text-[9px] text-purple-300">غرفة صوتية مباشرة</span>
                 </div>
             </div>
             <button onclick="leaveRoom()" class="bg-red-500/20 text-red-400 border border-red-500/40 text-[10px] px-2.5 py-1 rounded-lg font-bold">خروج</button>
@@ -111,28 +121,12 @@
                 </span>
                 <span class="text-[9px] bg-pink-500/20 text-pink-300 px-2 py-0.5 rounded-full border border-pink-500/30">بث حي</span>
             </div>
-
             <div class="grid grid-cols-4 gap-2 text-center" id="mic-grid"></div>
-        </div>
-
-        <div class="bg-[#18132a] rounded-xl p-2.5 border border-purple-900/40 flex justify-between items-center text-xs">
-            <div class="flex items-center gap-1 text-amber-400">
-                <i class="fa-solid fa-trophy text-[11px]"></i>
-                <span class="font-bold text-[10px]">المايك الأكثر دعماً:</span>
-                <span class="text-white text-[10px] bg-purple-900/80 px-2 py-0.5 rounded-full font-bold">سارة (55%)</span>
-            </div>
-            <button onclick="sendSupportGift()" class="bg-gradient-to-r from-amber-500 to-pink-600 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg shadow">
-                <i class="fa-solid fa-gift"></i> ادعم المايك
-            </button>
         </div>
 
         <div class="bg-[#18132a]/90 rounded-xl p-3 border border-purple-900/40 flex flex-col justify-between h-44">
             <div class="overflow-y-auto space-y-1.5 pr-1 text-[11px]" id="room-chat">
-                <div class="text-[9px] text-center text-purple-400 bg-purple-950/40 py-0.5 rounded">مرحباً بك في الغرفة الصوتية لـ سوو عبود!</div>
-                <div class="flex gap-1.5 items-start">
-                    <span class="font-bold text-amber-400">عبود [المالك]:</span>
-                    <span class="text-gray-200">أهلاً بالجميع، الصوت واضح عندكم على المايك؟</span>
-                </div>
+                <div class="text-[9px] text-center text-purple-400 bg-purple-950/40 py-0.5 rounded">مرحباً بك في الغرفة الصوتية!</div>
             </div>
 
             <div class="mt-2 flex gap-1.5">
@@ -148,15 +142,15 @@
             <i class="fa-solid fa-headphones text-sm"></i>
             <span class="text-[9px]">الغرف</span>
         </button>
-        <button onclick="alert('قسم الدردشة الخاصة والاتصالات الصوتية 1-على-1')" class="flex flex-col items-center gap-0.5 text-gray-400 hover:text-white text-xs">
+        <button onclick="alert('قسم الدردشة الخاصة قيد التفعيل')" class="flex flex-col items-center gap-0.5 text-gray-400 hover:text-white text-xs">
             <i class="fa-solid fa-comments text-sm"></i>
             <span class="text-[9px]">الدردشات</span>
         </button>
-        <button onclick="alert('متجر الكوينز: رصيدك 50,000 كوينز')" class="flex flex-col items-center gap-0.5 text-gray-400 hover:text-white text-xs">
+        <button onclick="alert('رصيدك الحالي بالمحفظة')" class="flex flex-col items-center gap-0.5 text-gray-400 hover:text-white text-xs">
             <i class="fa-solid fa-store text-sm"></i>
             <span class="text-[9px]">المتجر</span>
         </button>
-        <button onclick="alert('حسابك: عبود المالك | المدير العام للمنصة')" class="flex flex-col items-center gap-0.5 text-gray-400 hover:text-white text-xs">
+        <button onclick="alert('حسابك الشخصي مسجل بنجاح')" class="flex flex-col items-center gap-0.5 text-gray-400 hover:text-white text-xs">
             <i class="fa-solid fa-user text-sm"></i>
             <span class="text-[9px]">حسابي</span>
         </button>
@@ -164,10 +158,57 @@
 
     <!-- JavaScript Engine -->
     <script>
+        var currentUser = {
+            name: "",
+            id: "#" + Math.floor(1000 + Math.random() * 9000),
+            coins: 1000,
+            avatar: "",
+            isAdmin: false
+        };
+
+        function registerUser() {
+            var nameInput = document.getElementById('reg-name').value.trim();
+            var avatarInput = document.getElementById('reg-avatar').value.trim();
+
+            if(!nameInput) {
+                alert("الرجاء إدخال اسمك المستعار للدخول!");
+                return;
+            }
+
+            currentUser.name = nameInput;
+            currentUser.avatar = avatarInput || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150";
+
+            // إذا كان الاسم عبود أو عبد السلام، نمنحه صلاحيات المدير المطلق تلقائياً
+            if(nameInput.includes("عبود") || nameInput.includes("عبد السلام") || nameInput.includes("abod")) {
+                currentUser.isAdmin = true;
+                currentUser.id = "#ABOD99";
+                currentUser.coins = 50000;
+                document.getElementById('header-badge').innerText = "مدير";
+            } else {
+                document.getElementById('header-badge').innerText = "عضو";
+            }
+
+            document.getElementById('header-name').innerText = currentUser.name;
+            document.getElementById('header-id').innerText = currentUser.id;
+            document.getElementById('header-avatar').src = currentUser.avatar;
+            document.getElementById('user-coins').innerText = currentUser.coins.toLocaleString();
+
+            // إخفاء نافذة التسجيل
+            document.getElementById('login-modal').classList.add('hidden');
+        }
+
+        function checkAdminAccess() {
+            if(currentUser.isAdmin) {
+                alert("أهلاً بك يا مالك المنصة (عبود)! لديك صلاحيات الإدارة المطلقة.");
+            } else {
+                alert("هذه اللوحة خاصة بمدير المنصة العام.");
+            }
+        }
+
         var micSeatsData = [
-            { id: 1, name: "عبود المالك", avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150", support: 55, active: true },
-            { id: 2, name: "سارة 🌸", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150", support: 30, active: true },
-            { id: 3, name: "أحمد الصوافا", avatar: "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=150", support: 15, active: true },
+            { id: 1, name: "مايك المالك", avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150", support: 50, active: true },
+            { id: 2, name: "فارغ", avatar: "", support: 0, active: false },
+            { id: 3, name: "فارغ", avatar: "", support: 0, active: false },
             { id: 4, name: "فارغ", avatar: "", support: 0, active: false },
             { id: 5, name: "فارغ", avatar: "", support: 0, active: false },
             { id: 6, name: "فارغ", avatar: "", support: 0, active: false },
@@ -206,7 +247,7 @@
                 } else {
                     seatDiv.innerHTML = 
                         '<div class="w-full bg-gray-800 h-1 rounded-full mb-1"></div>' +
-                        '<div class="w-8 h-8 rounded-full bg-purple-900/30 border border-purple-700/40 flex items-center justify-center text-purple-400 text-xs"><i class="fa-solid fa-plus"></i></div>' +
+                        '<button onclick="takeMic(' + seat.id + ')" class="w-8 h-8 rounded-full bg-purple-900/30 border border-purple-700/40 flex items-center justify-center text-purple-400 text-xs"><i class="fa-solid fa-plus"></i></button>' +
                         '<span class="text-[9px] text-gray-500 mt-0.5">خالي</span>' +
                         '<span class="text-[8px] text-gray-600">0%</span>';
                 }
@@ -214,19 +255,25 @@
             }
         }
 
-        function sendSupportGift() {
-            micSeatsData[1].support += 10;
+        function takeMic(seatId) {
+            for(var i=0; i<micSeatsData.length; i++) {
+                if(micSeatsData[i].id === seatId) {
+                    micSeatsData[i].name = currentUser.name;
+                    micSeatsData[i].avatar = currentUser.avatar;
+                    micSeatsData[i].support = 10;
+                    micSeatsData[i].active = true;
+                    break;
+                }
+            }
             renderMicGrid();
-            var chat = document.getElementById('room-chat');
-            chat.innerHTML += '<div class="text-pink-300 font-bold text-[10px]">🎁 أرسل عبود هدية دعم للمايك وزادت نسبة الدعم!</div>';
-            chat.scrollTop = chat.scrollHeight;
+            alert("صعدت إلى المايك بنجاح يا " + currentUser.name + " 🎙️");
         }
 
         function sendChatMessage() {
             var input = document.getElementById('chat-input');
             if(!input.value.trim()) return;
             var chat = document.getElementById('room-chat');
-            chat.innerHTML += '<div class="flex gap-1.5 items-start"><span class="font-bold text-amber-400">عبود:</span><span class="text-gray-200">' + input.value + '</span></div>';
+            chat.innerHTML += '<div class="flex gap-1.5 items-start"><span class="font-bold text-amber-400">' + currentUser.name + ':</span><span class="text-gray-200">' + input.value + '</span></div>';
             input.value = '';
             chat.scrollTop = chat.scrollHeight;
         }
