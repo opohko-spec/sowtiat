@@ -154,6 +154,7 @@ root.innerHTML = `
     <p>قد يُطلب منك تأكيد بريدك الإلكتروني قبل الدخول.</p>
   </div>
 `;
+
 document.body.prepend(root);
 
 const form = document.getElementById("auth-form");
@@ -224,6 +225,7 @@ form.addEventListener("submit", async event => {
       if (pass.length < 8) {
         throw new Error("كلمة المرور يجب أن تكون 8 أحرف على الأقل.");
       }
+
       if (pass !== confirm) {
         throw new Error("كلمتا المرور غير متطابقتين.");
       }
@@ -233,8 +235,11 @@ form.addEventListener("submit", async event => {
       const { data, error } = await supabase.auth.signUp({
         email: mail,
         password: pass,
-        options: { emailRedirectTo: SITE_URL }
+        options: {
+          emailRedirectTo: SITE_URL
+        }
       });
+
       if (error) throw error;
 
       if (data.session) {
@@ -250,6 +255,7 @@ form.addEventListener("submit", async event => {
         email: mail,
         password: pass
       });
+
       if (error) throw error;
       say("تم تسجيل الدخول.");
     }
@@ -259,6 +265,7 @@ form.addEventListener("submit", async event => {
         await supabase.auth.resetPasswordForEmail(mail, {
           redirectTo: SITE_URL
         });
+
       if (error) throw error;
       say("إذا كان البريد مسجلاً، ستصلك رسالة الاستعادة.");
     }
@@ -267,6 +274,7 @@ form.addEventListener("submit", async event => {
       const { error } = await supabase.auth.updateUser({
         password: pass
       });
+
       if (error) throw error;
 
       await supabase.auth.signOut();
@@ -292,22 +300,95 @@ function addLogoutButton() {
 
   button.addEventListener("click", async () => {
     button.disabled = true;
+
     const { error } = await supabase.auth.signOut();
+
     button.disabled = false;
+
     if (error) say(error.message);
   });
 
   profile.appendChild(button);
 }
 
+async function updateProfile(session) {
+  const user = session?.user;
+  const profile = document.querySelector("#profile .card.center");
+  const headerCoins = document.getElementById("coinCount");
+
+  if (!user) {
+    if (headerCoins) headerCoins.textContent = "0";
+    return;
+  }
+
+  const [profileResult, walletResult] = await Promise.all([
+    supabase
+      .from("profiles")
+      .select("display_name, avatar_url")
+      .eq("id", user.id)
+      .maybeSingle(),
+
+    supabase
+      .from("coin_wallets")
+      .select("balance")
+      .eq("user_id", user.id)
+      .maybeSingle()
+  ]);
+
+  if (profileResult.error) {
+    console.error("تعذر تحميل الملف الشخصي:", profileResult.error.message);
+  }
+
+  if (walletResult.error) {
+    console.error("تعذر تحميل رصيد الكوينز:", walletResult.error.message);
+  }
+
+  if (profile) {
+    const avatar = profile.querySelector(".avatar");
+    const title = profile.querySelector("h2");
+    const subtitle = profile.querySelector("p.muted");
+
+    const displayName =
+      profileResult.data?.display_name ||
+      user.user_metadata?.display_name ||
+      user.email?.split("@")[0] ||
+      "عضو ABOUDSWO";
+
+    if (avatar) {
+      avatar.textContent = displayName.charAt(0).toUpperCase();
+    }
+
+    if (title) title.textContent = displayName;
+    if (subtitle) subtitle.textContent = user.email || "";
+
+    const note = document.querySelector("#profile .card p.small");
+
+    if (note) {
+      note.textContent = "حسابك مرتبط بقاعدة بيانات ABOUDSWO.";
+    }
+  }
+
+  const balance = walletResult.data?.balance ?? 0;
+
+  if (headerCoins) {
+    headerCoins.textContent = String(balance);
+  }
+}
+
 function applySession(session) {
   document.body.classList.add("auth-ready");
+
   document.body.classList.toggle(
     "authenticated",
     Boolean(session)
   );
 
-  if (session) addLogoutButton();
+  if (session) {
+    addLogoutButton();
+    void updateProfile(session);
+  } else {
+    void updateProfile(null);
+  }
 }
 
 supabase.auth.onAuthStateChange((event, session) => {
