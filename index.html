@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SwoAbod - سوو عبود التفاعلي الشامل</title>
+    <title>SwoAbod - المنصة الصوتية الذكية</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
@@ -17,67 +17,30 @@
 </head>
 <body class="bg-[#0b0716] min-h-screen flex flex-col justify-between p-3 select-none">
 
-    <!-- GOOGLE / ACCOUNT LOGIN MODAL -->
+    <!-- NAME LOGIN MODAL -->
     <div id="auth-screen" class="fixed inset-0 bg-black/95 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="glass-box w-full max-w-sm rounded-3xl p-6 space-y-4 text-center shadow-2xl">
             <div class="w-20 h-20 rounded-full bg-gradient-to-tr from-purple-600 via-pink-500 to-amber-400 flex items-center justify-center mx-auto text-3xl text-white shadow-xl">
                 <i class="fa-solid fa-microphone-lines"></i>
             </div>
             <div>
-                <h2 class="font-black text-xl text-white">SwoAbod الصوتية 🎙️</h2>
-                <p class="text-xs text-purple-300 mt-1">منصة الحفلات والغرف الصوتية والمكافآت اليومية</p>
+                <h2 class="font-black text-xl text-white">SwoAbod الذكي 🎙️</h2>
+                <p class="text-xs text-purple-300 mt-1">أدخل اسمك المستعار للدخول إلى الغرف والمضيفات</p>
             </div>
-            
-            <button onclick="loginWithGoogle()" class="w-full bg-white hover:bg-gray-100 text-gray-800 font-bold text-xs py-3 px-4 rounded-xl shadow-lg flex items-center justify-center gap-3 transition">
-                <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-5 h-5">
-                <span>المتابعة باستخدام حساب جوجل (Gmail)</span>
+            <div class="space-y-3 text-right">
+                <input type="text" id="reg-name" placeholder="أدخل اسمك هنا..." class="w-full bg-purple-950/60 border border-purple-700/50 rounded-xl py-3 px-3 text-xs text-white focus:outline-none focus:border-pink-500 text-center font-bold">
+            </div>
+            <button onclick="loginWithName()" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-black text-xs py-3 rounded-xl shadow-lg transition hover:scale-105">
+                دخول المنصة 🚀
             </button>
         </div>
     </div>
 
-    <!-- DAILY REWARDS POPUP MODAL -->
-    <div id="daily-reward-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-40 flex items-center justify-center p-4 hidden">
-        <div class="glass-box w-full max-w-sm rounded-3xl p-5 space-y-3 text-center shadow-2xl">
-            <div class="w-14 h-14 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center mx-auto text-2xl border border-amber-500/40">
-                <i class="fa-solid fa-gift"></i>
-            </div>
-            <h3 class="font-black text-sm text-white">المكافأة اليومية لتسجيل الدخول 🎁</h3>
-            <p class="text-[10px] text-purple-200">سجل دخولك يومياً لتضاعف نقاطك ورصيدك من الكوينز!</p>
-
-            <div class="grid grid-cols-4 gap-1.5 py-2">
-                <div class="bg-purple-950/60 p-2 rounded-xl border border-amber-500/40 flex flex-col items-center">
-                    <span class="text-[8px] text-gray-400">اليوم 1</span>
-                    <i class="fa-solid fa-coins text-amber-400 text-xs my-1"></i>
-                    <span class="text-[9px] font-bold text-amber-300">+100</span>
-                </div>
-                <div class="bg-purple-950/60 p-2 rounded-xl border border-purple-800 flex flex-col items-center">
-                    <span class="text-[8px] text-gray-400">اليوم 2</span>
-                    <i class="fa-solid fa-coins text-amber-400 text-xs my-1"></i>
-                    <span class="text-[9px] font-bold text-amber-300">+250</span>
-                </div>
-                <div class="bg-purple-950/60 p-2 rounded-xl border border-purple-800 flex flex-col items-center">
-                    <span class="text-[8px] text-gray-400">اليوم 3</span>
-                    <i class="fa-solid fa-coins text-amber-400 text-xs my-1"></i>
-                    <span class="text-[9px] font-bold text-amber-300">+500</span>
-                </div>
-                <div class="bg-purple-950/60 p-2 rounded-xl border border-purple-800 flex flex-col items-center">
-                    <span class="text-[8px] text-gray-400">اليوم 4</span>
-                    <i class="fa-solid fa-box-open text-pink-400 text-xs my-1"></i>
-                    <span class="text-[9px] font-bold text-pink-300">صندوق</span>
-                </div>
-            </div>
-
-            <button onclick="claimDailyReward()" class="w-full bg-gradient-to-r from-amber-500 to-pink-600 text-white font-bold text-xs py-2.5 rounded-xl shadow">
-                استلام المكافأة الآن ✨
-            </button>
-        </div>
-    </div>
-
-    <!-- MAIN APP HEADER -->
+    <!-- HEADER -->
     <header class="glass-box rounded-2xl p-3 flex items-center justify-between shadow-xl">
         <div class="flex items-center gap-3">
             <div class="relative">
-                <img id="my-avatar" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150" class="w-11 h-11 rounded-full border-2 border-purple-500 object-cover">
+                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150" class="w-11 h-11 rounded-full border-2 border-purple-500 object-cover">
                 <span id="my-badge" class="absolute -bottom-1 -right-1 bg-amber-400 text-[8px] px-1 text-black font-black rounded-full">عضو</span>
             </div>
             <div>
@@ -91,50 +54,24 @@
                 </div>
             </div>
         </div>
-        <div class="flex gap-1.5">
-            <button onclick="showDailyRewardModal()" class="bg-purple-900/60 border border-amber-500/40 text-amber-300 font-bold text-[10px] px-2.5 py-1.5 rounded-xl shadow flex items-center gap-1">
-                <i class="fa-solid fa-gift text-amber-400"></i> المكافأة
-            </button>
-            <button onclick="adminPanelAction()" class="bg-gradient-to-r from-amber-500 to-red-600 text-white font-bold text-[11px] px-3 py-1.5 rounded-xl shadow flex items-center gap-1">
-                <i class="fa-solid fa-crown"></i> الإدارة
-            </button>
-        </div>
+        <button onclick="adminPanelAction()" class="bg-gradient-to-r from-amber-500 to-red-600 text-white font-bold text-[11px] px-3 py-1.5 rounded-xl shadow flex items-center gap-1">
+            <i class="fa-solid fa-crown"></i> الإدارة
+        </button>
     </header>
-    <!-- MAIN ROOMS LIST VIEW -->
+    <!-- ROOMS LIST -->
     <main id="view-home" class="flex-1 space-y-3 mt-3">
         <div class="bg-gradient-to-r from-purple-900 to-indigo-900 rounded-2xl p-4 flex justify-between items-center shadow-xl border border-purple-500/30">
             <div>
-                <h3 class="font-black text-xs text-white">روم عبود وسوماتش الرسمي 🔥</h3>
-                <p class="text-[10px] text-purple-200 mt-0.5">انضم لترى الحاضرين وتطلب المايك وتتحدث</p>
+                <h3 class="font-black text-xs text-white">غرفة المالك الرسمية (عبود) 🔥</h3>
+                <p class="text-[10px] text-purple-200 mt-0.5">المحطة الرئيسية لجميع المضيفين والضيوف وروبوتات الذكاء الاصطناعي</p>
             </div>
-            <button onclick="enterVoiceRoom()" class="bg-gradient-to-r from-pink-500 to-purple-600 px-4 py-2 rounded-xl text-xs font-bold shadow text-white hover:scale-105 transition">
-                دخول الروم
+            <button onclick="enterOwnerRoom()" class="bg-gradient-to-r from-pink-500 to-purple-600 px-4 py-2 rounded-xl text-xs font-bold shadow text-white hover:scale-105 transition">
+                دخول الغرفة
             </button>
-        </div>
-
-        <div class="space-y-2">
-            <h4 class="font-bold text-xs text-purple-300 flex items-center gap-1">
-                <i class="fa-solid fa-fire text-orange-500"></i> الغرف الحية والمميزة
-            </h4>
-            <div onclick="enterVoiceRoom()" class="glass-box rounded-2xl p-3 flex justify-between items-center cursor-pointer hover:border-purple-400 transition">
-                <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 rounded-2xl bg-purple-600/30 flex items-center justify-center text-purple-300 text-lg">
-                        <i class="fa-solid fa-headphones"></i>
-                    </div>
-                    <div>
-                        <h5 class="font-bold text-xs text-white">روم عبود وسوماتش الرسمي 🔥</h5>
-                        <div class="flex items-center gap-2 mt-1">
-                            <span class="text-[9px] bg-purple-950 text-purple-300 px-1.5 rounded">ID: 9088</span>
-                            <span class="text-[9px] text-emerald-400 font-bold">بث مباشر</span>
-                        </div>
-                    </div>
-                </div>
-                <span class="bg-purple-600/30 text-purple-200 text-xs px-3.5 py-1.5 rounded-xl border border-purple-500/40 font-bold">دخول</span>
-            </div>
         </div>
     </main>
 
-    <!-- ACTIVE VOICE ROOM VIEW -->
+    <!-- ACTIVE VOICE ROOM (OWNER ROOM) -->
     <main id="view-room" class="flex-1 space-y-3 mt-2 hidden">
         <div class="glass-box rounded-xl p-2.5 flex justify-between items-center">
             <div class="flex items-center gap-2">
@@ -142,18 +79,18 @@
                     <i class="fa-solid fa-chevron-right text-xs"></i>
                 </button>
                 <div>
-                    <h4 class="font-bold text-xs text-white">روم عبود وسوماتش الرسمي 🔥</h4>
-                    <span class="text-[9px] text-purple-300">ID: 9088 • متصل حياً</span>
+                    <h4 class="font-bold text-xs text-white">غرفة المالك عبود والذكاء الاصطناعي 👑</h4>
+                    <span class="text-[9px] text-purple-300">مجموع المضيفين والروبوتات متواجدون الآن</span>
                 </div>
             </div>
             <button onclick="leaveVoiceRoom()" class="bg-red-500/20 text-red-300 border border-red-500/40 text-[10px] px-3 py-1 rounded-lg font-bold">خروج</button>
         </div>
 
-        <!-- 8 Microphones Grid -->
+        <!-- 8 Microphones Grid (AI Bots & Hosts) -->
         <div class="glass-box rounded-2xl p-3 shadow-lg">
             <div class="flex justify-between items-center mb-2">
                 <span class="text-[10px] text-purple-300 font-bold flex items-center gap-1">
-                    <i class="fa-solid fa-microphone-lines text-pink-400"></i> المقاعد النشطة (8 مايكات)
+                    <i class="fa-solid fa-microphone-lines text-pink-400"></i> المقاعد (المالك، المضيفين، والروبوتات النسائية)
                 </span>
                 <button onclick="requestMic()" class="bg-gradient-to-r from-pink-500 to-purple-600 text-white text-[10px] px-3 py-1 rounded-lg font-bold shadow">
                     <i class="fa-solid fa-hand-holding"></i> طلب مايك ✋
@@ -162,28 +99,28 @@
             <div class="grid grid-cols-4 gap-2 text-center" id="mic-grid"></div>
         </div>
 
-        <!-- Live Online Users list in Room -->
+        <!-- Live Online Users -->
         <div class="glass-box rounded-2xl p-3 shadow-lg">
             <h4 class="font-bold text-xs text-purple-300 mb-2 flex items-center justify-between">
-                <span><i class="fa-solid fa-users text-pink-400"></i> المتواجدون بالروم الآن</span>
+                <span><i class="fa-solid fa-users text-pink-400"></i> الحاضرون في غرفة المالك</span>
                 <span id="online-count" class="text-[9px] bg-purple-900 text-purple-200 px-2 py-0.5 rounded-full">1 متصل</span>
             </h4>
             <div id="online-users-list" class="flex gap-2 overflow-x-auto pb-1"></div>
         </div>
 
-        <!-- Room Live Chat -->
-        <div class="glass-box rounded-xl p-3 flex flex-col justify-between h-36 shadow-lg">
+        <!-- Room Live Chat & AI Bots Interaction -->
+        <div class="glass-box rounded-xl p-3 flex flex-col justify-between h-40 shadow-lg">
             <div class="overflow-y-auto space-y-1.5 pr-1 text-[11px]" id="room-chat">
-                <div class="text-[9px] text-center text-purple-400 bg-purple-950/40 py-0.5 rounded">مرحباً بك في سوو عبود! تم ربط جوجل وتفعيل نظام المتواجدين بفرصة الصعود للمايك.</div>
+                <div class="text-[9px] text-center text-purple-400 bg-purple-950/40 py-0.5 rounded">🤖 الروبوت سارة ولين متواجدات بالمايكات للترحيب بك ومناقشة أي موضوع!</div>
             </div>
             <div class="mt-2 flex gap-1.5">
-                <input type="text" id="chat-input" placeholder="اكتب رسالة..." class="flex-1 bg-purple-950/60 text-xs rounded-xl py-1.5 px-3 border border-purple-800 text-white focus:outline-none">
+                <input type="text" id="chat-input" placeholder="اكتب رسالة أو تحدث مع الروبوتات..." class="flex-1 bg-purple-950/60 text-xs rounded-xl py-1.5 px-3 border border-purple-800 text-white focus:outline-none">
                 <button onclick="sendChatMessage()" class="bg-purple-600 text-white px-3.5 py-1.5 rounded-xl text-xs font-bold">إرسال</button>
             </div>
         </div>
     </main>
 
-    <!-- NAVIGATION BAR -->
+    <!-- NAVIGATION -->
     <nav class="glass-box py-2 px-6 flex justify-around items-center rounded-2xl mt-3">
         <button onclick="leaveVoiceRoom()" class="flex flex-col items-center gap-0.5 text-purple-400 font-bold text-xs">
             <i class="fa-solid fa-headphones text-sm"></i>
@@ -206,47 +143,47 @@
     <!-- SCRIPT ENGINE -->
     <script>
         var myUser = { name: "", id: "", avatar: "", coins: 1000, isAdmin: false };
+        
+        // المقاعد تشمل المالك، الروبوتات الذكية، والمضيفين
         var micSeats = [
-            { seatNum: 1, name: "عبود المالك", active: true },
-            { seatNum: 2, name: "خالي", active: false },
-            { seatNum: 3, name: "خالي", active: false },
-            { seatNum: 4, name: "خالي", active: false },
-            { seatNum: 5, name: "خالي", active: false },
-            { seatNum: 6, name: "خالي", active: false },
-            { seatNum: 7, name: "خالي", active: false },
-            { seatNum: 8, name: "خالي", active: false }
+            { seatNum: 1, name: "عبود (المالك)", avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150", active: true, type: "owner" },
+            { seatNum: 2, name: "🤖 سارة (مضيفة ذكية)", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150", active: true, type: "bot" },
+            { seatNum: 3, name: "🤖 لين (مضيفة ذكية)", avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150", active: true, type: "bot" },
+            { seatNum: 4, name: "خالي", avatar: "", active: false, type: "empty" },
+            { seatNum: 5, name: "خالي", avatar: "", active: false, type: "empty" },
+            { seatNum: 6, name: "خالي", avatar: "", active: false, type: "empty" },
+            { seatNum: 7, name: "خالي", active: false, type: "empty" },
+            { seatNum: 8, name: "خالي", active: false, type: "empty" }
         ];
 
         window.onload = function() {
-            var savedName = localStorage.getItem('swo_google_name');
+            var savedName = localStorage.getItem('swo_name_only');
             if(savedName) {
                 myUser.name = savedName;
-                myUser.id = localStorage.getItem('swo_google_id');
-                myUser.avatar = localStorage.getItem('swo_google_avatar');
-                myUser.coins = parseInt(localStorage.getItem('swo_google_coins')) || 1000;
-                myUser.isAdmin = localStorage.getItem('swo_google_admin') === 'true';
+                myUser.id = localStorage.getItem('swo_id_only');
+                myUser.avatar = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150";
+                myUser.coins = parseInt(localStorage.getItem('swo_coins_only')) || 1000;
+                myUser.isAdmin = localStorage.getItem('swo_admin_only') === 'true';
                 
                 document.getElementById('auth-screen').classList.add('hidden');
                 updateUI();
                 registerOnlinePresence();
+                enterOwnerRoom(); // دخول تلقائي لغرفة المالك
             }
             startSyncLoop();
         };
 
-        function loginWithGoogle() {
-            let googleEmail = prompt("أدخل بريدك الإلكتروني لحساب جوجل (Gmail) لتسجيل الدخول:");
-            if(!googleEmail || !googleEmail.includes("@")) {
-                alert("الرجاء إدخال بريد إلكتروني صحيح!");
+        function loginWithName() {
+            let nameVal = document.getElementById('reg-name').value.trim();
+            if(!nameVal) {
+                alert("الرجاء إدخال اسمك المستعار للدخول!");
                 return;
             }
 
-            let userName = googleEmail.split('@')[0];
-            userName = userName.charAt(0).toUpperCase() + userName.slice(1);
-
-            myUser.name = userName;
+            myUser.name = nameVal;
             myUser.avatar = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150";
 
-            if(googleEmail.includes("abod") || googleEmail.includes("abd") || userName.includes("عبود") || userName.includes("عبد")) {
+            if(nameVal.includes("عبود") || nameVal.includes("عبد السلام") || nameVal.includes("abod")) {
                 myUser.isAdmin = true;
                 myUser.id = "#ABOD99";
                 myUser.coins = 50000;
@@ -256,55 +193,45 @@
                 myUser.coins = 1000;
             }
 
-            localStorage.setItem('swo_google_name', myUser.name);
-            localStorage.setItem('swo_google_id', myUser.id);
-            localStorage.setItem('swo_google_avatar', myUser.avatar);
-            localStorage.setItem('swo_google_coins', myUser.coins);
-            localStorage.setItem('swo_google_admin', myUser.isAdmin);
+            localStorage.setItem('swo_name_only', myUser.name);
+            localStorage.setItem('swo_id_only', myUser.id);
+            localStorage.setItem('swo_coins_only', myUser.coins);
+            localStorage.setItem('swo_admin_only', myUser.isAdmin);
 
             document.getElementById('auth-screen').classList.add('hidden');
             updateUI();
             registerOnlinePresence();
-            showDailyRewardModal();
-        }
-
-        function showDailyRewardModal() {
-            document.getElementById('daily-reward-modal').classList.remove('hidden');
-        }
-
-        function claimDailyReward() {
-            myUser.coins += 100;
-            localStorage.setItem('swo_google_coins', myUser.coins);
-            updateUI();
-            document.getElementById('daily-reward-modal').classList.add('hidden');
-            alert("مبروك! تم إضافة 100 كوينز إلى رصيدك كمكافأة دخول يومية 🎉");
+            
+            // ترحيب آلي من الروبوتات عند الدخول
+            triggerAIBotWelcome(myUser.name);
+            enterOwnerRoom();
         }
 
         function updateUI() {
             document.getElementById('my-name').innerText = myUser.name;
             document.getElementById('my-id').innerText = myUser.id;
             document.getElementById('my-coins').innerText = myUser.coins.toLocaleString();
-            document.getElementById('my-badge').innerText = myUser.isAdmin ? "مدير" : "عضو";
+            document.getElementById('my-badge').innerText = myUser.isAdmin ? "مدير" : "مضيف جديد";
         }
 
         function registerOnlinePresence() {
-            var users = JSON.parse(localStorage.getItem('swo_online_users') || '[]');
+            var users = JSON.parse(localStorage.getItem('swo_owner_room_users') || '[]');
             users = users.filter(u => u.id !== myUser.id);
             users.push({ name: myUser.name, id: myUser.id, avatar: myUser.avatar, isAdmin: myUser.isAdmin, time: Date.now() });
-            localStorage.setItem('swo_online_users', JSON.stringify(users));
+            localStorage.setItem('swo_owner_room_users', JSON.stringify(users));
         }
 
         function logoutApp() {
             if(confirm("تسجيل الخروج؟")) {
-                var users = JSON.parse(localStorage.getItem('swo_online_users') || '[]');
+                var users = JSON.parse(localStorage.getItem('swo_owner_room_users') || '[]');
                 users = users.filter(u => u.id !== myUser.id);
-                localStorage.setItem('swo_online_users', JSON.stringify(users));
+                localStorage.setItem('swo_owner_room_users', JSON.stringify(users));
                 localStorage.clear();
                 location.reload();
             }
         }
 
-        function enterVoiceRoom() {
+        function enterOwnerRoom() {
             document.getElementById('view-home').classList.add('hidden');
             document.getElementById('view-room').classList.remove('hidden');
             renderMicGrid();
@@ -321,14 +248,13 @@
             grid.innerHTML = '';
             for(var i=0; i<micSeats.length; i++) {
                 var s = micSeats[i];
+                let avatarImg = s.avatar || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150";
                 grid.innerHTML += `
                     <div class="bg-purple-950/40 p-2 rounded-xl border border-purple-800/40 flex flex-col items-center">
                         <div class="w-full bg-gray-800 h-1 rounded-full mb-1"></div>
-                        <div class="w-9 h-9 rounded-full bg-purple-900/40 border border-purple-700/50 flex items-center justify-center text-purple-300 text-xs">
-                            <i class="fa-solid ${s.active ? 'fa-microphone text-pink-400' : 'fa-plus'}"></i>
-                        </div>
+                        <img src="${avatarImg}" class="w-9 h-9 rounded-full border ${s.type === 'bot' ? 'border-pink-400' : 'border-purple-400'} object-cover">
                         <span class="text-[9px] font-bold text-white mt-1 truncate w-full">${s.name}</span>
-                        <span class="text-[8px] ${s.active ? 'text-pink-400 font-bold' : 'text-gray-500'}">${s.active ? 'يتحدث' : 'خالي'}</span>
+                        <span class="text-[8px] ${s.active ? 'text-pink-400 font-bold' : 'text-gray-500'}">${s.active ? (s.type === 'bot' ? 'مضيفة ذكية 🎙️' : 'يتحدث') : 'خالي'}</span>
                     </div>
                 `;
             }
@@ -336,7 +262,7 @@
 
         function renderOnlineUsers() {
             var listDiv = document.getElementById('online-users-list');
-            var users = JSON.parse(localStorage.getItem('swo_online_users') || '[]');
+            var users = JSON.parse(localStorage.getItem('swo_owner_room_users') || '[]');
             document.getElementById('online-count').innerText = users.length + " متصل";
             
             listDiv.innerHTML = '';
@@ -346,50 +272,68 @@
                     <div class="flex flex-col items-center flex-shrink-0 bg-purple-900/30 p-2 rounded-xl border border-purple-700/40 w-16">
                         <img src="${u.avatar}" class="w-9 h-9 rounded-full border border-pink-500 object-cover">
                         <span class="text-[9px] font-bold text-white mt-1 truncate w-full text-center">${u.name}</span>
-                        ${myUser.isAdmin ? `<button onclick="inviteToMic('${u.name}')" class="mt-1 bg-pink-600 text-white text-[7px] px-1.5 py-0.5 rounded">صعده</button>` : ''}
+                        ${myUser.isAdmin ? `<button onclick="inviteToMic('${u.name}')" class="mt-1 bg-pink-600 text-white text-[7px] px-1.5 py-0.5 rounded">صعده للمايك</button>` : '<span class="text-[7px] text-purple-300 mt-1">غرفة المالك</span>'}
                     </div>
                 `;
             }
         }
 
+        function triggerAIBotWelcome(username) {
+            var msgs = JSON.parse(localStorage.getItem('swo_chat_all') || '[]');
+            msgs.push({ name: "🤖 سارة (مضيفة)", text: "هلا والله منورنا يا " + username + " في غرفة المالك عبود! كيف حالك اليوم وشو حابب نتحاور فيه؟" });
+            msgs.push({ name: "🤖 لين (مضيفة)", text: "يا هلا بـ " + username + "، أنورت وأسفرت! تفضل اسأل أو اطرح أي موضوع وبنناقشه معك بكل صراحة وبدون خجل 😉" });
+            localStorage.setItem('swo_chat_all', JSON.stringify(msgs));
+        }
+
         function requestMic() {
-            var msgs = JSON.parse(localStorage.getItem('swo_chat') || '[]');
-            msgs.push({ name: "النظام", text: "✋ العضو " + myUser.name + " يطلب الصعود إلى المايك!" });
-            localStorage.setItem('swo_chat', JSON.stringify(msgs));
-            alert("تم إرسال طلب المايك للإدارة بنجاح!");
+            var msgs = JSON.parse(localStorage.getItem('swo_chat_all') || '[]');
+            msgs.push({ name: "النظام", text: "✋ المضيف الجديد " + myUser.name + " يطلب الصعود للمايك في غرفة المالك!" });
+            localStorage.setItem('swo_chat_all', JSON.stringify(msgs));
+            alert("تم إرسال طلبك للمايك بنجاح!");
         }
 
         function inviteToMic(username) {
             for(var i=0; i<micSeats.length; i++) {
                 if(!micSeats[i].active) {
                     micSeats[i].name = username;
+                    micSeats[i].avatar = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150";
                     micSeats[i].active = true;
+                    micSeats[i].type = "guest";
                     break;
                 }
             }
             renderMicGrid();
-            var msgs = JSON.parse(localStorage.getItem('swo_chat') || '[]');
-            msgs.push({ name: "المدير عبود", text: "🎙️ تم قبول العضو " + username + " وصعوده إلى المايك!" });
-            localStorage.setItem('swo_chat', JSON.stringify(msgs));
+            var msgs = JSON.parse(localStorage.getItem('swo_chat_all') || '[]');
+            msgs.push({ name: "المالك عبود", text: "🎙️ تم صعود المضيف " + username + " إلى المايك بجوار الروبوتات والمضيفين!" });
+            localStorage.setItem('swo_chat_all', JSON.stringify(msgs));
         }
 
         function sendChatMessage() {
             var input = document.getElementById('chat-input');
             var text = input.value.trim();
             if(!text) return;
-            var msgs = JSON.parse(localStorage.getItem('swo_chat') || '[]');
+
+            var msgs = JSON.parse(localStorage.getItem('swo_chat_all') || '[]');
             msgs.push({ name: myUser.name, text: text });
-            localStorage.setItem('swo_chat', JSON.stringify(msgs));
+
+            // رد تلقائي من الروبوتات الذكية تناقش المستخدم في أي موضوع بشخصية بشرية جريئة
+            if(text.includes("كيف") || text.includes("شو") || text.includes("مرحبا") || text.includes("هلا")) {
+                msgs.push({ name: "🤖 سارة", text: "أنا تمام التمام يا " + myUser.name + "! عم نفكر بموضوع جديد للنقاش، شو رأيك نطرح موضوع شيق ونشوف آراء الكل؟" });
+            } else {
+                msgs.push({ name: "🤖 لين", text: "كلامك بيمتع يا " + myUser.name + "، وموضوعك بيفتح آفاق لنقاش طويل وصريح معك. كمل سامعينك!" });
+            }
+
+            localStorage.setItem('swo_chat_all', JSON.stringify(msgs));
             input.value = '';
             loadChatMessages();
         }
 
         function loadChatMessages() {
             var chatBox = document.getElementById('room-chat');
-            var msgs = JSON.parse(localStorage.getItem('swo_chat') || '[]');
-            chatBox.innerHTML = '<div class="text-[9px] text-center text-purple-400 bg-purple-950/40 py-0.5 rounded">غرفة البث المباشر نشطة.</div>';
+            var msgs = JSON.parse(localStorage.getItem('swo_chat_all') || '[]');
+            chatBox.innerHTML = '<div class="text-[9px] text-center text-purple-400 bg-purple-950/40 py-0.5 rounded">غرفة المالك والمضيفات الذكيات نشطة.</div>';
             for(var i=0; i<msgs.length; i++) {
-                chatBox.innerHTML += `<div class="flex gap-1.5 items-start"><span class="font-bold text-pink-400">${msgs[i].name}:</span><span class="text-gray-200">${msgs[i].text}</span></div>`;
+                chatBox.innerHTML += `<div class="flex gap-1.5 items-start"><span class="font-bold ${msgs[i].name.includes('🤖') ? 'text-pink-400' : 'text-amber-400'}">${msgs[i].name}:</span><span class="text-gray-200">${msgs[i].text}</span></div>`;
             }
             chatBox.scrollTop = chatBox.scrollHeight;
             renderOnlineUsers();
@@ -397,9 +341,9 @@
 
         function adminPanelAction() {
             if(myUser.isAdmin) {
-                alert("أهلاً بك يا مالك المنصة (عبود)! لديك صلاحيات الإدارة المطلقة والتحكم الكامل بالروم والمايكات والكوينز.");
+                alert("أهلاً بك يا مالك المنصة (عبود)! أنت تسيطر على غرفة المالك وتدير جميع المضيفين والروبوتات.");
             } else {
-                alert("أهلاً بك " + myUser.name + " في منصة SwoAbod.");
+                alert("أهلاً بك " + myUser.name + " في غرفة المالك عبود.");
             }
         }
 
