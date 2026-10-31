@@ -13,6 +13,9 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {
   }
 });
 
+// إتاحة جلسة Supabase لنظام الغرف الصوتية
+window.aboudswoSupabase = supabase;
+
 const style = document.createElement("style");
 style.textContent = `
 body:not(.auth-ready) .app,
