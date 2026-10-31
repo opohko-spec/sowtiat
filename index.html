@@ -49,9 +49,8 @@
         .animate-pulse-fast {
             animation: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
-        /* Custom Scrollbar */
         ::-webkit-scrollbar {
-            width: 5px;
+            width: 4px;
         }
         ::-webkit-scrollbar-track {
             background: #18132a;
@@ -67,6 +66,42 @@
     <!-- Header Navigation -->
     <header class="bg-brand-card sticky top-0 z-40 border-b border-purple-900/40 px-4 py-3 flex items-center justify-between shadow-lg">
         <div class="flex items-center gap-3">
-            <div class="relative cursor-pointer" onclick="openProfileModal()">
+            <div class="relative cursor-pointer" onclick="switchTab('profile')">
                 <img id="user-avatar" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150" class="w-10 h-10 rounded-full border-2 border-brand-purple object-cover">
-                <span class="absolute -bottom-1 -right-1 bg-brand-gold text-xs px-1 text-black font-bold rounded-full border border-black" id="user-badge">
+                <span class="absolute -bottom-1 -right-1 bg-brand-gold text-[9px] px-1 text-black font-black rounded-full border border-black" id="user-badge">مدير</span>
+            </div>
+            <div>
+                <div class="flex items-center gap-2">
+                    <span id="user-name" class="font-bold text-xs">عبود المالك</span>
+                    <span id="user-id" class="text-[10px] bg-purple-950 text-purple-300 px-2 py-0.5 rounded-full border border-purple-800">#ABOD99</span>
+                </div>
+                <div class="flex items-center gap-1 text-xs text-brand-gold mt-0.5">
+                    <i class="fa-solid fa-coins text-[10px]"></i>
+                    <span id="user-coins" class="font-bold text-xs">50,000</span>
+                    <button onclick="switchTab('store')" class="mr-1 bg-brand-gold/20 hover:bg-brand-gold/40 text-brand-gold text-[9px] px-1.5 py-0.5 rounded-full border border-brand-gold/40 font-bold transition">شحن +</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <button onclick="openAdminPanel()" class="bg-gradient-to-r from-amber-500 to-red-600 text-white font-bold text-xs px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1 border border-amber-300/40 glow-gold">
+                <i class="fa-solid fa-crown text-xs"></i>
+                الدارة
+            </button>
+            <button onclick="switchTab('rooms')" class="text-gray-300 hover:text-white p-2">
+                <i class="fa-solid fa-compass text-base"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-1 p-3 max-w-md mx-auto w-full">
+
+        <!-- TAB 1: ROOMS LIST -->
+        <section id="tab-rooms" class="space-y-4">
+            <div class="relative">
+                <input type="text" placeholder="إبحث عن غرفة صوتية أو أيدي..." class="w-full bg-brand-card text-xs rounded-xl py-2.5 px-4 pr-10 border border-purple-900/50 focus:outline-none focus:border-brand-purple">
+                <i class="fa-solid fa-magnifying-glass absolute right-3 top-3 text-gray-400 text-xs"></i>
+            </div>
+
+            <div class="bg-gradient-to-r from-purple-900 to-indigo-900 rounded-
