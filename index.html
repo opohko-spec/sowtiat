@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -21,10 +22,9 @@ h3{font-size:17px;margin:22px 0 12px}
 .row{display:flex;align-items:center;gap:12px}
 .icon{width:48px;height:48px;border-radius:15px;background:#493363;display:grid;place-items:center;font-size:23px}
 .grow{flex:1}.small{font-size:12px;color:#aaa3bd}
-button{border:0;border-radius:12px;padding:10px 15px;background:#9561df;color:white;font-family:inherit;font-weight:bold}
+button{border:0;border-radius:12px;padding:10px 15px;background:#9561df;color:white;font-family:inherit;font-weight:bold;cursor:pointer}
 button:disabled{opacity:.5}
-.room{cursor:pointer}
-.room:active{transform:scale(.98)}
+.room{cursor:pointer}.room:active{transform:scale(.98)}
 nav{position:fixed;bottom:0;left:0;right:0;background:#1b172b;border-top:1px solid #39304d;display:flex;justify-content:space-around;padding:10px 3px;z-index:10}
 nav button{background:transparent;color:#aaa3bd;padding:5px;font-size:11px}
 nav button.active{color:#c29aff}
@@ -35,9 +35,11 @@ input{background:#302a40;color:white;border:1px solid #55476d;border-radius:12px
 .avatar{width:48px;height:48px;border-radius:50%;background:#50376f;margin:auto auto 7px;display:grid;place-items:center;font-size:22px}
 .center{text-align:center}
 .notice{position:fixed;top:75px;left:10px;right:10px;background:#483365;padding:13px;border-radius:12px;text-align:center;display:none;z-index:20}
+.status{margin:12px 0;padding:10px;border-radius:12px;background:#30243f;text-align:center;font-size:13px}
 </style>
 </head>
 <body>
+
 <header>
  <div class="brand">👑 عبودswo</div>
  <div class="coins">🪙 <span id="coins">250</span></div>
@@ -46,7 +48,6 @@ input{background:#302a40;color:white;border:1px solid #55476d;border-radius:12px
 <div class="notice" id="notice"></div>
 
 <main>
-
 <section class="page active" id="home">
  <div class="hero">
   <h2>أهلاً بك في عبودswo ❤️</h2>
@@ -57,10 +58,7 @@ input{background:#302a40;color:white;border:1px solid #55476d;border-radius:12px
  <h3>🎁 مكافأة الدخول اليومي</h3>
  <div class="card row">
   <div class="icon">🎁</div>
-  <div class="grow">
-   <b>هدية اليوم</b>
-   <div class="small">احصل على 20 كوين يومياً</div>
-  </div>
+  <div class="grow"><b>هدية اليوم</b><div class="small">احصل على 20 كوين يومياً</div></div>
   <button id="reward" onclick="claim()">استلام</button>
  </div>
 
@@ -76,25 +74,27 @@ input{background:#302a40;color:white;border:1px solid #55476d;border-radius:12px
 <section class="page" id="rooms">
  <h2>🎧 الغرف الصوتية</h2>
  <p class="small">اختر غرفتك المفضلة</p>
- <button onclick="notify('إنشاء الغرف يحتاج إلى تفعيل الخادم')">＋ إنشاء غرفة</button>
  <div id="allRooms"></div>
 </section>
 
 <section class="page" id="room">
- <button onclick="go('rooms')">رجوع ←</button>
+ <button onclick="leaveRoom()">رجوع ←</button>
  <div class="center">
   <div class="avatar" style="width:85px;height:85px;font-size:38px;margin-top:20px">🎙️</div>
-  <h2 id="roomTitle">سهرة الأصدقاء</h2>
+  <h2 id="roomTitle">الغرفة</h2>
   <p class="small" id="roomHost"></p>
  </div>
+
+ <div class="status" id="roomStatus">لم يتم الاتصال بعد</div>
+
  <h3>مقاعد الغرفة</h3>
  <div class="seats" id="seats"></div>
- <p class="small center">واجهة تجريبية - الصوت المباشر يحتاج خدمة صوتية وخادماً.</p>
+
  <div class="row" style="justify-content:center;flex-wrap:wrap">
-  <button onclick="notify('الميكروفون يحتاج تفعيل الصوت المباشر')">🎙️ المايك</button>
-  <button onclick="notify('تم إرسال طلب رفع اليد تجريبياً')">✋ رفع اليد</button>
-  <button onclick="notify('الهدايا ستضاف مع المتجر')">🎁 هدية</button>
-  <button onclick="go('rooms')" style="background:#9d354b">☎ خروج</button>
+  <button id="micButton" onclick="toggleMic()" disabled>🎙️ تشغيل المايك</button>
+  <button onclick="notify('ميزة رفع اليد ستضاف لاحقاً')">✋ رفع اليد</button>
+  <button onclick="notify('متجر الهدايا سيضاف لاحقاً')">🎁 هدية</button>
+  <button onclick="leaveRoom()" style="background:#9d354b">☎ خروج</button>
  </div>
 </section>
 
@@ -138,7 +138,6 @@ input{background:#302a40;color:white;border:1px solid #55476d;border-radius:12px
  <div class="card" onclick="notify('الإعدادات قيد التطوير')">⚙️ الإعدادات</div>
  <div class="card" onclick="notify('لوحة الإدارة تحتاج خادماً آمناً')">🛡️ لوحة الإدارة</div>
 </section>
-
 </main>
 
 <nav>
@@ -149,7 +148,14 @@ input{background:#302a40;color:white;border:1px solid #55476d;border-radius:12px
  <button onclick="go('profile',this)"><span>👤</span>حسابي</button>
 </nav>
 
+<!-- مكتبة LiveKit -->
+<script src="https://cdn.jsdelivr.net/npm/livekit-client/dist/livekit-client.umd.min.js"></script>
+
 <script>
+// إعدادات الاتصال
+const SERVER_URL = "https://aboudswo-server.onrender.com";
+const LIVEKIT_URL = "wss://aboudswo-f8vzeflz.livekit.cloud";
+
 const rooms=[
  ['سهرة الأصدقاء','عبودswo','دردشة عامة','128','🎙️'],
  ['ليلة الطرب','نجم الليل','موسيقى','86','🎵'],
@@ -159,6 +165,9 @@ const rooms=[
 ];
 
 let coins=Number(localStorage.getItem('as_coins')||250);
+let liveRoom=null;
+let micEnabled=false;
+let connecting=false;
 
 function updateCoins(){
  document.getElementById('coins').textContent=coins;
@@ -169,7 +178,7 @@ function notify(t){
  n.textContent=t;
  n.style.display='block';
  clearTimeout(window.timer);
- window.timer=setTimeout(()=>n.style.display='none',2500);
+ window.timer=setTimeout(()=>n.style.display='none',3000);
 }
 
 function go(id,btn){
@@ -196,12 +205,156 @@ function makeRoom(r){
 document.getElementById('homeRooms').innerHTML=rooms.slice(0,3).map(makeRoom).join('');
 document.getElementById('allRooms').innerHTML=rooms.map(makeRoom).join('');
 
-function openRoom(name){
- const r=rooms.find(x=>x[0]===name);
- document.getElementById('roomTitle').textContent=r[0];
- document.getElementById('roomHost').textContent='المضيف: '+r[1]+' • المستمعون: '+r[3];
- document.getElementById('seats').innerHTML=['المضيف','مقعد 2','مقعد 3','مقعد 4','مقعد 5','مقعد 6'].map((s,i)=>`<div class="seat"><div class="avatar">${i===0?'👑':'👤'}</div>${s}</div>`).join('');
+function setRoomStatus(message){
+ document.getElementById('roomStatus').textContent=message;
+}
+
+function attachAudio(track){
+ const element=track.attach();
+ element.autoplay=true;
+ element.style.display='none';
+ document.body.appendChild(element);
+}
+
+async function openRoom(name){
+ if(connecting){
+  notify('انتظر حتى يكتمل الاتصال');
+  return;
+ }
+
+ if(liveRoom){
+  await leaveRoom(false);
+ }
+
+ const selected=rooms.find(x=>x[0]===name);
+ if(!selected)return;
+
+ document.getElementById('roomTitle').textContent=selected[0];
+ document.getElementById('roomHost').textContent='المضيف: '+selected[1];
+ document.getElementById('seats').innerHTML=
+ ['أنت','مقعد 2','مقعد 3','مقعد 4','مقعد 5','مقعد 6']
+ .map((s,i)=>`<div class="seat"><div class="avatar">${i===0?'🎙️':'👤'}</div>${s}</div>`).join('');
+
  go('room');
+ await connectRoom(name);
+}
+
+async function connectRoom(name){
+ connecting=true;
+ setRoomStatus('جارٍ الاتصال بالغرفة...');
+ document.getElementById('micButton').disabled=true;
+
+ try{
+  if(!window.LivekitClient){
+   throw new Error('لم يتم تحميل مكتبة الصوت. حدّث الصفحة وحاول مجدداً.');
+  }
+
+  let participantName=localStorage.getItem('as_name');
+  if(!participantName){
+   participantName=prompt('اكتب اسمك داخل الغرفة:');
+   if(!participantName || !participantName.trim()){
+    throw new Error('يجب كتابة اسم للدخول إلى الغرفة');
+   }
+   participantName=participantName.trim().slice(0,40);
+   localStorage.setItem('as_name',participantName);
+  }
+
+  const response=await fetch(
+   SERVER_URL+'/getToken?room='+encodeURIComponent(name)+
+   '&name='+encodeURIComponent(participantName)
+  );
+
+  if(!response.ok){
+   throw new Error('تعذر الحصول على رمز الدخول من الخادم');
+  }
+
+  const data=await response.json();
+  if(!data.token)throw new Error('لم يصل رمز الاتصال');
+
+  const room=new LivekitClient.Room();
+  liveRoom=room;
+
+  room.on(LivekitClient.RoomEvent.TrackSubscribed,(track)=>{
+   if(track.kind===LivekitClient.Track.Kind.Audio){
+    attachAudio(track);
+   }
+  });
+
+  room.on(LivekitClient.RoomEvent.TrackUnsubscribed,(track)=>{
+   track.detach().forEach(element=>element.remove());
+  });
+
+  room.on(LivekitClient.RoomEvent.Disconnected,()=>{
+   micEnabled=false;
+   document.getElementById('micButton').disabled=true;
+   document.getElementById('micButton').textContent='🎙️ تشغيل المايك';
+   setRoomStatus('تم قطع الاتصال');
+   liveRoom=null;
+  });
+
+  await room.connect(LIVEKIT_URL,data.token);
+
+  for(const participant of room.remoteParticipants.values()){
+   for(const publication of participant.trackPublications.values()){
+    if(publication.track &&
+       publication.track.kind===LivekitClient.Track.Kind.Audio){
+     attachAudio(publication.track);
+    }
+   }
+  }
+
+  await room.localParticipant.setMicrophoneEnabled(true);
+  micEnabled=true;
+
+  document.getElementById('micButton').disabled=false;
+  document.getElementById('micButton').textContent='🔇 إيقاف المايك';
+  setRoomStatus('متصل بالغرفة والصوت يعمل 🎉');
+  notify('تم دخول الغرفة بنجاح');
+
+ }catch(error){
+  console.error(error);
+  if(liveRoom){
+   try{await liveRoom.disconnect();}catch(e){}
+   liveRoom=null;
+  }
+  setRoomStatus('تعذر الاتصال: '+error.message);
+  notify(error.message);
+ }finally{
+  connecting=false;
+ }
+}
+
+async function toggleMic(){
+ if(!liveRoom){
+  notify('أنت غير متصل بالغرفة');
+  return;
+ }
+
+ try{
+  micEnabled=!micEnabled;
+  await liveRoom.localParticipant.setMicrophoneEnabled(micEnabled);
+  document.getElementById('micButton').textContent=
+   micEnabled?'🔇 إيقاف المايك':'🎙️ تشغيل المايك';
+  setRoomStatus(micEnabled?'الميكروفون يعمل 🎙️':'الميكروفون مغلق 🔇');
+ }catch(error){
+  micEnabled=!micEnabled;
+  notify('لم نتمكن من تشغيل الميكروفون');
+ }
+}
+
+async function leaveRoom(showMessage=true){
+ if(liveRoom){
+  try{await liveRoom.disconnect();}catch(e){}
+  liveRoom=null;
+ }
+ micEnabled=false;
+ connecting=false;
+ document.getElementById('micButton').disabled=true;
+ document.getElementById('micButton').textContent='🎙️ تشغيل المايك';
+ setRoomStatus('تم الخروج من الغرفة');
+ document.querySelectorAll('audio').forEach(a=>a.remove());
+ go('rooms');
+ if(showMessage)notify('خرجت من الغرفة');
 }
 
 function claim(){
