@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SwoAbod - تسجيل الدخول بـ جوجل</title>
+    <title>SwoAbod - سوو عبود التفاعلي الشامل</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
@@ -17,15 +17,15 @@
 </head>
 <body class="bg-[#0b0716] min-h-screen flex flex-col justify-between p-3 select-none">
 
-    <!-- GOOGLE LOGIN MODAL -->
+    <!-- GOOGLE / ACCOUNT LOGIN MODAL -->
     <div id="auth-screen" class="fixed inset-0 bg-black/95 backdrop-blur-md z-50 flex items-center justify-center p-4">
-        <div class="glass-box w-full max-w-sm rounded-3xl p-6 space-y-5 text-center shadow-2xl">
+        <div class="glass-box w-full max-w-sm rounded-3xl p-6 space-y-4 text-center shadow-2xl">
             <div class="w-20 h-20 rounded-full bg-gradient-to-tr from-purple-600 via-pink-500 to-amber-400 flex items-center justify-center mx-auto text-3xl text-white shadow-xl">
                 <i class="fa-solid fa-microphone-lines"></i>
             </div>
             <div>
                 <h2 class="font-black text-xl text-white">SwoAbod الصوتية 🎙️</h2>
-                <p class="text-xs text-purple-300 mt-1">سجل الدخول بحسابك لتنضم للغرف وتتفاعل حياً</p>
+                <p class="text-xs text-purple-300 mt-1">منصة الحفلات والغرف الصوتية والمكافآت اليومية</p>
             </div>
             
             <button onclick="loginWithGoogle()" class="w-full bg-white hover:bg-gray-100 text-gray-800 font-bold text-xs py-3 px-4 rounded-xl shadow-lg flex items-center justify-center gap-3 transition">
@@ -35,7 +35,45 @@
         </div>
     </div>
 
-    <!-- HEADER -->
+    <!-- DAILY REWARDS POPUP MODAL -->
+    <div id="daily-reward-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-40 flex items-center justify-center p-4 hidden">
+        <div class="glass-box w-full max-w-sm rounded-3xl p-5 space-y-3 text-center shadow-2xl">
+            <div class="w-14 h-14 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center mx-auto text-2xl border border-amber-500/40">
+                <i class="fa-solid fa-gift"></i>
+            </div>
+            <h3 class="font-black text-sm text-white">المكافأة اليومية لتسجيل الدخول 🎁</h3>
+            <p class="text-[10px] text-purple-200">سجل دخولك يومياً لتضاعف نقاطك ورصيدك من الكوينز!</p>
+
+            <div class="grid grid-cols-4 gap-1.5 py-2">
+                <div class="bg-purple-950/60 p-2 rounded-xl border border-amber-500/40 flex flex-col items-center">
+                    <span class="text-[8px] text-gray-400">اليوم 1</span>
+                    <i class="fa-solid fa-coins text-amber-400 text-xs my-1"></i>
+                    <span class="text-[9px] font-bold text-amber-300">+100</span>
+                </div>
+                <div class="bg-purple-950/60 p-2 rounded-xl border border-purple-800 flex flex-col items-center">
+                    <span class="text-[8px] text-gray-400">اليوم 2</span>
+                    <i class="fa-solid fa-coins text-amber-400 text-xs my-1"></i>
+                    <span class="text-[9px] font-bold text-amber-300">+250</span>
+                </div>
+                <div class="bg-purple-950/60 p-2 rounded-xl border border-purple-800 flex flex-col items-center">
+                    <span class="text-[8px] text-gray-400">اليوم 3</span>
+                    <i class="fa-solid fa-coins text-amber-400 text-xs my-1"></i>
+                    <span class="text-[9px] font-bold text-amber-300">+500</span>
+                </div>
+                <div class="bg-purple-950/60 p-2 rounded-xl border border-purple-800 flex flex-col items-center">
+                    <span class="text-[8px] text-gray-400">اليوم 4</span>
+                    <i class="fa-solid fa-box-open text-pink-400 text-xs my-1"></i>
+                    <span class="text-[9px] font-bold text-pink-300">صندوق</span>
+                </div>
+            </div>
+
+            <button onclick="claimDailyReward()" class="w-full bg-gradient-to-r from-amber-500 to-pink-600 text-white font-bold text-xs py-2.5 rounded-xl shadow">
+                استلام المكافأة الآن ✨
+            </button>
+        </div>
+    </div>
+
+    <!-- MAIN APP HEADER -->
     <header class="glass-box rounded-2xl p-3 flex items-center justify-between shadow-xl">
         <div class="flex items-center gap-3">
             <div class="relative">
@@ -53,12 +91,16 @@
                 </div>
             </div>
         </div>
-        <button onclick="adminPanelAction()" class="bg-gradient-to-r from-amber-500 to-red-600 text-white font-bold text-[11px] px-3 py-1.5 rounded-xl shadow flex items-center gap-1">
-            <i class="fa-solid fa-crown"></i> الإدارة
-        </button>
+        <div class="flex gap-1.5">
+            <button onclick="showDailyRewardModal()" class="bg-purple-900/60 border border-amber-500/40 text-amber-300 font-bold text-[10px] px-2.5 py-1.5 rounded-xl shadow flex items-center gap-1">
+                <i class="fa-solid fa-gift text-amber-400"></i> المكافأة
+            </button>
+            <button onclick="adminPanelAction()" class="bg-gradient-to-r from-amber-500 to-red-600 text-white font-bold text-[11px] px-3 py-1.5 rounded-xl shadow flex items-center gap-1">
+                <i class="fa-solid fa-crown"></i> الإدارة
+            </button>
+        </div>
     </header>
-
-    <!-- ROOMS LIST -->
+    <!-- MAIN ROOMS LIST VIEW -->
     <main id="view-home" class="flex-1 space-y-3 mt-3">
         <div class="bg-gradient-to-r from-purple-900 to-indigo-900 rounded-2xl p-4 flex justify-between items-center shadow-xl border border-purple-500/30">
             <div>
@@ -69,9 +111,30 @@
                 دخول الروم
             </button>
         </div>
+
+        <div class="space-y-2">
+            <h4 class="font-bold text-xs text-purple-300 flex items-center gap-1">
+                <i class="fa-solid fa-fire text-orange-500"></i> الغرف الحية والمميزة
+            </h4>
+            <div onclick="enterVoiceRoom()" class="glass-box rounded-2xl p-3 flex justify-between items-center cursor-pointer hover:border-purple-400 transition">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-2xl bg-purple-600/30 flex items-center justify-center text-purple-300 text-lg">
+                        <i class="fa-solid fa-headphones"></i>
+                    </div>
+                    <div>
+                        <h5 class="font-bold text-xs text-white">روم عبود وسوماتش الرسمي 🔥</h5>
+                        <div class="flex items-center gap-2 mt-1">
+                            <span class="text-[9px] bg-purple-950 text-purple-300 px-1.5 rounded">ID: 9088</span>
+                            <span class="text-[9px] text-emerald-400 font-bold">بث مباشر</span>
+                        </div>
+                    </div>
+                </div>
+                <span class="bg-purple-600/30 text-purple-200 text-xs px-3.5 py-1.5 rounded-xl border border-purple-500/40 font-bold">دخول</span>
+            </div>
+        </div>
     </main>
 
-    <!-- ACTIVE VOICE ROOM -->
+    <!-- ACTIVE VOICE ROOM VIEW -->
     <main id="view-room" class="flex-1 space-y-3 mt-2 hidden">
         <div class="glass-box rounded-xl p-2.5 flex justify-between items-center">
             <div class="flex items-center gap-2">
@@ -99,7 +162,7 @@
             <div class="grid grid-cols-4 gap-2 text-center" id="mic-grid"></div>
         </div>
 
-        <!-- Live Online Users in Room -->
+        <!-- Live Online Users list in Room -->
         <div class="glass-box rounded-2xl p-3 shadow-lg">
             <h4 class="font-bold text-xs text-purple-300 mb-2 flex items-center justify-between">
                 <span><i class="fa-solid fa-users text-pink-400"></i> المتواجدون بالروم الآن</span>
@@ -111,7 +174,7 @@
         <!-- Room Live Chat -->
         <div class="glass-box rounded-xl p-3 flex flex-col justify-between h-36 shadow-lg">
             <div class="overflow-y-auto space-y-1.5 pr-1 text-[11px]" id="room-chat">
-                <div class="text-[9px] text-center text-purple-400 bg-purple-950/40 py-0.5 rounded">تم الربط بحسابات جوجل بنجاح!</div>
+                <div class="text-[9px] text-center text-purple-400 bg-purple-950/40 py-0.5 rounded">مرحباً بك في سوو عبود! تم ربط جوجل وتفعيل نظام المتواجدين بفرصة الصعود للمايك.</div>
             </div>
             <div class="mt-2 flex gap-1.5">
                 <input type="text" id="chat-input" placeholder="اكتب رسالة..." class="flex-1 bg-purple-950/60 text-xs rounded-xl py-1.5 px-3 border border-purple-800 text-white focus:outline-none">
@@ -120,7 +183,7 @@
         </div>
     </main>
 
-    <!-- NAVIGATION -->
+    <!-- NAVIGATION BAR -->
     <nav class="glass-box py-2 px-6 flex justify-around items-center rounded-2xl mt-3">
         <button onclick="leaveVoiceRoom()" class="flex flex-col items-center gap-0.5 text-purple-400 font-bold text-xs">
             <i class="fa-solid fa-headphones text-sm"></i>
@@ -130,7 +193,7 @@
             <i class="fa-solid fa-photo-film text-sm"></i>
             <span class="text-[9px]">اللحظات</span>
         </button>
-        <button onclick="alert('متجر الكوينز مفعل')" class="flex flex-col items-center gap-0.5 text-gray-400 hover:text-white text-xs">
+        <button onclick="alert('متجر الكوينز والهدايا مفعل')" class="flex flex-col items-center gap-0.5 text-gray-400 hover:text-white text-xs">
             <i class="fa-solid fa-store text-sm"></i>
             <span class="text-[9px]">المتجر</span>
         </button>
@@ -170,7 +233,6 @@
             startSyncLoop();
         };
 
-        // محاكاة واختيار الحساب الحقيقي عبر نافذة منبثقة أو إدخال بريد جوجل السريع للربط
         function loginWithGoogle() {
             let googleEmail = prompt("أدخل بريدك الإلكتروني لحساب جوجل (Gmail) لتسجيل الدخول:");
             if(!googleEmail || !googleEmail.includes("@")) {
@@ -179,13 +241,11 @@
             }
 
             let userName = googleEmail.split('@')[0];
-            // تحويل أول حرف لأبجديّة جميلة
             userName = userName.charAt(0).toUpperCase() + userName.slice(1);
 
             myUser.name = userName;
             myUser.avatar = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150";
 
-            // تحديد صلاحيات المدير المالك لك (عبود / عبد السلام)
             if(googleEmail.includes("abod") || googleEmail.includes("abd") || userName.includes("عبود") || userName.includes("عبد")) {
                 myUser.isAdmin = true;
                 myUser.id = "#ABOD99";
@@ -205,7 +265,19 @@
             document.getElementById('auth-screen').classList.add('hidden');
             updateUI();
             registerOnlinePresence();
-            alert("تم تسجيل الدخول بحساب جوجل بنجاح! أهلاً بك يا " + myUser.name);
+            showDailyRewardModal();
+        }
+
+        function showDailyRewardModal() {
+            document.getElementById('daily-reward-modal').classList.remove('hidden');
+        }
+
+        function claimDailyReward() {
+            myUser.coins += 100;
+            localStorage.setItem('swo_google_coins', myUser.coins);
+            updateUI();
+            document.getElementById('daily-reward-modal').classList.add('hidden');
+            alert("مبروك! تم إضافة 100 كوينز إلى رصيدك كمكافأة دخول يومية 🎉");
         }
 
         function updateUI() {
@@ -325,7 +397,7 @@
 
         function adminPanelAction() {
             if(myUser.isAdmin) {
-                alert("أهلاً بك يا مالك المنصة (عبود)! لديك صلاحيات الإدارة المطلقة والتحكم الكامل بالروم والمايكات.");
+                alert("أهلاً بك يا مالك المنصة (عبود)! لديك صلاحيات الإدارة المطلقة والتحكم الكامل بالروم والمايكات والكوينز.");
             } else {
                 alert("أهلاً بك " + myUser.name + " في منصة SwoAbod.");
             }
