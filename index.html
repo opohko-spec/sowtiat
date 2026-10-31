@@ -1,406 +1,159 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#100e1c">
-<title>عبودswo | ABOUDSWO</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#101326">
+<title>ABOUDSWO | مجتمعك الصوتي</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
-*{box-sizing:border-box}
-body{margin:0;background:#100e1c;color:white;font-family:Cairo,sans-serif}
-header{padding:17px;background:#1b172b;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:5;border-bottom:1px solid #39304d}
-.brand{font-size:24px;font-weight:800;color:#c29aff}
-.coins{background:#30243f;padding:8px 13px;border-radius:20px;color:#f4d47e}
-main{max-width:600px;margin:auto;padding:16px 14px 90px}
-.page{display:none}.page.active{display:block}
-.hero{padding:25px;border-radius:22px;background:linear-gradient(135deg,#7044ad,#292044);margin-bottom:20px}
-.hero h2{margin:0 0 8px}.hero p{font-size:13px;color:#e0d5f1}
-h3{font-size:17px;margin:22px 0 12px}
-.card{background:#201c30;border:1px solid #393149;border-radius:17px;padding:14px;margin:10px 0}
-.row{display:flex;align-items:center;gap:12px}
-.icon{width:48px;height:48px;border-radius:15px;background:#493363;display:grid;place-items:center;font-size:23px}
-.grow{flex:1}.small{font-size:12px;color:#aaa3bd}
-button{border:0;border-radius:12px;padding:10px 15px;background:#9561df;color:white;font-family:inherit;font-weight:bold;cursor:pointer}
-button:disabled{opacity:.5}
-.room{cursor:pointer}.room:active{transform:scale(.98)}
-nav{position:fixed;bottom:0;left:0;right:0;background:#1b172b;border-top:1px solid #39304d;display:flex;justify-content:space-around;padding:10px 3px;z-index:10}
-nav button{background:transparent;color:#aaa3bd;padding:5px;font-size:11px}
-nav button.active{color:#c29aff}
-nav span{display:block;font-size:20px}
-input{background:#302a40;color:white;border:1px solid #55476d;border-radius:12px;padding:12px;width:100%;font:inherit}
-.seats{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin:20px 0}
-.seat{text-align:center;background:#29243b;padding:14px 4px;border-radius:16px;font-size:12px}
-.avatar{width:48px;height:48px;border-radius:50%;background:#50376f;margin:auto auto 7px;display:grid;place-items:center;font-size:22px}
-.center{text-align:center}
-.notice{position:fixed;top:75px;left:10px;right:10px;background:#483365;padding:13px;border-radius:12px;text-align:center;display:none;z-index:20}
-.status{margin:12px 0;padding:10px;border-radius:12px;background:#30243f;text-align:center;font-size:13px}
+:root{--bg:#0d1020;--panel:#171b30;--panel2:#202640;--gold:#f5c76a;--text:#f7f4ed;--muted:#aab1c8;--line:#303752;--pink:#ef78aa;--green:#61d6a6}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 85% -10%,#343052 0,transparent 35%),var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Tahoma,Arial,sans-serif}button,input,textarea{font:inherit}button{cursor:pointer;border:0}.app{max-width:1100px;margin:auto;padding:14px 14px 90px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 2px 18px}.brand{display:flex;align-items:center;gap:10px}.logo{width:44px;height:44px;border-radius:15px;background:linear-gradient(135deg,#f7d98b,#a96a29);display:grid;place-items:center;color:#24170a;font-weight:1000;font-size:19px;box-shadow:0 7px 24px #d49a4140}.brand b{font-size:19px;letter-spacing:.5px}.brand small{display:block;color:var(--muted);font-size:11px}.top-actions{display:flex;gap:8px}.pill{background:var(--panel);border:1px solid var(--line);color:var(--text);border-radius:20px;padding:9px 12px;font-size:12px}.coins{color:var(--gold)}.hero{border:1px solid #63513a;background:linear-gradient(115deg,#302742,#1b2039 60%,#47352b);padding:20px;border-radius:23px;display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:18px}.hero h1{font-size:24px;margin:0 0 7px}.hero p{margin:0;color:#d4cde0;font-size:13px}.hero .crown{font-size:48px}.section-head{display:flex;justify-content:space-between;align-items:center;margin:22px 2px 12px}.section-head h2{font-size:17px;margin:0}.muted{color:var(--muted);font-size:12px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.tile,.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:14px}.room{background:linear-gradient(145deg,#242b49,#171b30);min-height:150px;position:relative;overflow:hidden}.room:after{content:"";position:absolute;width:110px;height:110px;border-radius:50%;background:#f5c76a12;left:-20px;top:-25px}.room-top{display:flex;justify-content:space-between;align-items:center}.room-icon{font-size:28px}.live{font-size:10px;color:#ff9ebc;background:#54273d;padding:5px 8px;border-radius:20px}.room h3{font-size:15px;margin:12px 0 5px}.room p{font-size:11px;color:var(--muted);margin:0 0 12px}.room-bottom{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--muted)}.btn{background:linear-gradient(135deg,#f5d58b,#d49a45);color:#24190c;font-weight:800;border-radius:12px;padding:10px 14px}.btn.secondary{background:var(--panel2);border:1px solid var(--line);color:var(--text)}.btn.pink{background:linear-gradient(135deg,#f49bc0,#bb5484);color:#250f1b}.btn:disabled{opacity:.45;cursor:not-allowed}.wide{width:100%}.tabs{position:fixed;z-index:10;bottom:0;left:0;right:0;background:#111528f2;backdrop-filter:blur(15px);border-top:1px solid var(--line);display:flex;justify-content:center;padding:8px 5px calc(8px + env(safe-area-inset-bottom));gap:2px}.tab{flex:1;max-width:125px;background:transparent;color:var(--muted);padding:7px 2px;border-radius:12px;font-size:10px}.tab span{display:block;font-size:19px;margin-bottom:3px}.tab.active{color:var(--gold);background:#f5c76a12}.page{display:none}.page.active{display:block}.feed-item{display:flex;gap:10px;margin-bottom:10px}.avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#6a74a9,#bf7296);display:grid;place-items:center;font-weight:800;flex:none}.feed-item p{font-size:13px;line-height:1.7;margin:8px 0}.field{width:100%;background:#101528;color:var(--text);border:1px solid var(--line);border-radius:12px;padding:12px;outline:none}.field:focus{border-color:var(--gold)}textarea.field{resize:vertical;min-height:90px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.list-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}.list-row:last-child{border:0}.tag{font-size:10px;color:var(--gold);background:#f5c76a14;padding:5px 8px;border-radius:20px}.notice{border:1px solid #725e37;background:#382f22;color:#ffe1a2;padding:12px;border-radius:13px;font-size:12px;line-height:1.7;margin:12px 0}.room-stage{background:linear-gradient(160deg,#252d4c,#14182a);border:1px solid var(--line);border-radius:22px;padding:16px;margin-top:12px}.mics{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:16px 0}.mic{background:#171d34;border:1px solid #3a4567;border-radius:13px;text-align:center;padding:12px 4px;font-size:11px}.mic strong{display:block;font-size:22px;margin-bottom:5px}.gift-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.gift{background:#222943;border:1px solid var(--line);border-radius:13px;padding:10px 3px;color:var(--text);text-align:center;font-size:11px}.gift b{display:block;font-size:24px;margin-bottom:5px}.hidden{display:none!important}.small{font-size:11px;color:var(--muted)}.center{text-align:center}.modal{position:fixed;inset:0;background:#0009;z-index:30;display:none;align-items:center;justify-content:center;padding:18px}.modal.show{display:flex}.modal-box{width:min(440px,100%);background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:18px}.modal-box h3{margin-top:0}.toast{position:fixed;top:14px;left:50%;transform:translateX(-50%);background:#26334a;border:1px solid #53617d;padding:11px 16px;border-radius:12px;z-index:50;display:none;font-size:12px;max-width:90%}.toast.show{display:block}.story{display:inline-grid;place-items:center;width:64px;height:64px;border-radius:50%;border:2px solid var(--gold);background:#242b48;margin:4px;font-size:25px}.footer-note{text-align:center;color:#737d9c;font-size:10px;margin:25px 0}
+@media(min-width:700px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.hero h1{font-size:30px}.app{padding-top:22px}.tabs{left:50%;right:auto;transform:translateX(-50%);width:min(720px,96%);border:1px solid var(--line);border-bottom:0;border-radius:18px 18px 0 0}}
 </style>
 </head>
 <body>
-
-<header>
- <div class="brand">👑 عبودswo</div>
- <div class="coins">🪙 <span id="coins">250</span></div>
+<div class="app">
+<header class="top">
+ <div class="brand"><div class="logo">A</div><div><b>ABOUDSWO</b><small>مجتمعك.. صوتك.. عالمك</small></div></div>
+ <div class="top-actions"><div class="pill coins">🪙 <b id="coinCount">500</b></div><button class="pill" onclick="showToast('لا توجد إشعارات جديدة')">🔔</button></div>
 </header>
 
-<div class="notice" id="notice"></div>
-
 <main>
-<section class="page active" id="home">
- <div class="hero">
-  <h2>أهلاً بك في عبودswo ❤️</h2>
-  <p>عالم يجمعنا… وصوت يوصلنا</p>
-  <button onclick="go('rooms')">اكتشف الغرف 🎧</button>
- </div>
-
- <h3>🎁 مكافأة الدخول اليومي</h3>
- <div class="card row">
-  <div class="icon">🎁</div>
-  <div class="grow"><b>هدية اليوم</b><div class="small">احصل على 20 كوين يومياً</div></div>
-  <button id="reward" onclick="claim()">استلام</button>
- </div>
-
- <h3>🎧 الغرف الصوتية المميزة</h3>
- <div id="homeRooms"></div>
-
- <h3>🎉 الأحداث والمناسبات</h3>
- <div class="card">🏆 مسابقة المعلومات - قريباً</div>
- <div class="card">🎤 ليلة المواهب - قريباً</div>
- <div class="card">🎊 حفلة نهاية الأسبوع</div>
-</section>
-
-<section class="page" id="rooms">
- <h2>🎧 الغرف الصوتية</h2>
- <p class="small">اختر غرفتك المفضلة</p>
- <div id="allRooms"></div>
-</section>
-
-<section class="page" id="room">
- <button onclick="leaveRoom()">رجوع ←</button>
- <div class="center">
-  <div class="avatar" style="width:85px;height:85px;font-size:38px;margin-top:20px">🎙️</div>
-  <h2 id="roomTitle">الغرفة</h2>
-  <p class="small" id="roomHost"></p>
- </div>
-
- <div class="status" id="roomStatus">لم يتم الاتصال بعد</div>
-
- <h3>مقاعد الغرفة</h3>
- <div class="seats" id="seats"></div>
-
- <div class="row" style="justify-content:center;flex-wrap:wrap">
-  <button id="micButton" onclick="toggleMic()" disabled>🎙️ تشغيل المايك</button>
-  <button onclick="notify('ميزة رفع اليد ستضاف لاحقاً')">✋ رفع اليد</button>
-  <button onclick="notify('متجر الهدايا سيضاف لاحقاً')">🎁 هدية</button>
-  <button onclick="leaveRoom()" style="background:#9d354b">☎ خروج</button>
+<section id="home" class="page active">
+ <div class="hero"><div><h1>أهلاً بك في عالمك ✨</h1><p>تواصل، شارك، العب، واصنع لحظات لا تُنسى.</p><div class="actions"><button class="btn" onclick="go('rooms')">اكتشف الغرف</button><button class="btn secondary" onclick="go('feed')">انشر الآن</button></div></div><div class="crown">👑</div></div>
+ <div class="section-head"><h2>القصص اليومية</h2><span class="muted">شارك لحظتك</span></div>
+  <div class="card"><div id="stories"><button class="story" onclick="addStory()">＋</button><button class="story" onclick="showToast('قصة صديق')">🌅</button><button class="story" onclick="showToast('قصة صديق')">🎤</button><button class="story" onclick="showToast('قصة صديق')">🐎</button></div><div class="small">اضغط + لإضافة قصة تجريبية</div></div>
+ <div class="section-head"><h2>غرف مقترحة</h2><button class="pill" onclick="go('rooms')">عرض الكل ←</button></div>
+ <div class="grid" id="homeRooms"></div>
+ <div class="section-head"><h2>مساحتك الإبداعية</h2></div>
+ <div class="grid">
+  <button class="tile" onclick="go('games')">🎮<h3>الألعاب</h3><span class="muted">تحديات وأوقات ممتعة</span></button>
+  <button class="tile" onclick="go('stories')">📚<h3>القصص والروايات</h3><span class="muted">اقرأ واكتب حكايتك</span></button>
+  <button class="tile" onclick="go('music')">🎵<h3>الموسيقى</h3><span class="muted">محتوى صوتي مرخّص</span></button>
+  <button class="tile" onclick="go('shop')">🎁<h3>الهدايا والمتجر</h3><span class="muted">كوينز تجريبية مجانية</span></button>
  </div>
 </section>
 
-<section class="page" id="messages">
- <h2>✉ الرسائل</h2>
- <div class="card" onclick="chat('إدارة عبودswo')">📢 إدارة عبودswo <div class="small">رسائل النظام والإعلانات</div></div>
- <div class="card" onclick="chat('نجم الليل')">🌟 نجم الليل <div class="small">أهلاً بك</div></div>
- <div class="card" onclick="chat('الأميرة')">👑 الأميرة <div class="small">مرحباً</div></div>
- <div class="small">المحادثات في هذه النسخة تجريبية ومحلية.</div>
-</section>
-
-<section class="page" id="chat">
- <button onclick="go('messages')">رجوع ←</button>
- <h2 id="chatTitle">المحادثة</h2>
- <div class="card" id="chatMessages" style="min-height:250px"></div>
- <div class="row">
-  <input id="message" placeholder="اكتب رسالتك...">
-  <button onclick="send()">إرسال</button>
+<section id="rooms" class="page">
+ <div class="section-head"><h2>🎙️ الغرف الصوتية</h2><button class="btn" onclick="createRoom()">＋ إنشاء غرفة</button></div>
+ <div class="notice">الغرف المعروضة هنا نموذج واجهة. الاتصال الصوتي الحقيقي يحتاج نجاح إصدار رمز LiveKit من خادمك وربط المشاركين.</div>
+ <div class="grid" id="roomList"></div>
+ <div id="roomPanel" class="room-stage hidden">
+  <div class="section-head"><h2 id="roomTitle">الغرفة</h2><button class="pill" onclick="leaveRoom()">✕ خروج</button></div>
+  <div class="center"><div style="font-size:40px">🎙️</div><p class="muted" id="roomMeta">أنت داخل الغرفة</p></div>
+  <div class="mics" id="micSlots"></div>
+  <div class="actions"><button class="btn" id="micButton" onclick="toggleMic()">🎤 تشغيل المايك</button><button class="btn secondary" onclick="openGifts()">🎁 إرسال هدية</button><button class="btn secondary" onclick="supportRoom()">💛 دعم الغرفة</button></div>
+  <p class="small" id="voiceStatus">الصوت غير متصل بعد.</p>
+  <div class="section-head"><h3>رسائل الغرفة</h3></div>
+  <div id="roomChat" class="small">مرحباً بالجميع في الغرفة 👋</div>
+  <div class="actions"><input id="roomMessage" class="field" placeholder="اكتب رسالة..." style="flex:1"><button class="btn" onclick="sendRoomMessage()">إرسال</button></div>
  </div>
 </section>
 
-<section class="page" id="events">
- <h2>🎉 الأحداث والمناسبات</h2>
- <div class="card">🏆 مسابقة المعلومات <p class="small">مسابقات وجوائز</p></div>
- <div class="card">🎤 ليلة المواهب <p class="small">أظهر موهبتك أمام الجميع</p></div>
- <div class="card">🎊 احتفالات ومناسبات أسبوعية</div>
+<section id="feed" class="page">
+ <div class="section-head"><h2>📝 المنشورات</h2><span class="tag">مجتمع ABOUDSWO</span></div>
+ <div class="card"><textarea id="postText" class="field" placeholder="بماذا تفكر؟ شارك منشوراً مع المجتمع..."></textarea><div class="actions"><button class="btn" onclick="publishPost()">نشر</button><button class="btn secondary" onclick="showToast('إرفاق الصور يحتاج تخزيناً آمناً على الخادم')">＋ صورة</button></div></div>
+ <div class="section-head"><h2>آخر المشاركات</h2></div><div id="posts"></div>
 </section>
 
-<section class="page" id="profile">
- <div class="center">
-  <h2>حسابي الشخصي</h2>
-  <div class="avatar" style="width:90px;height:90px;font-size:40px">👤</div>
-  <h3>مستخدم عبودswo</h3>
-  <p class="small">ID: 1000001</p>
+<section id="messages" class="page">
+ <div class="section-head"><h2>💬 الرسائل</h2><span class="tag">محادثة تجريبية</span></div>
+ <div class="card"><div id="dmChat" class="small">ابدأ محادثتك هنا 👋</div><div class="actions"><input id="dmInput" class="field" placeholder="اكتب رسالة..." style="flex:1"><button class="btn" onclick="sendDM()">إرسال</button></div></div>
+ <p class="small">الرسائل حالياً محفوظة داخل الصفحة فقط، وليست محادثات بين مستخدمين.</p>
+</section>
+
+<section id="games" class="page">
+ <div class="section-head"><h2>🎮 الألعاب</h2></div>
+ <div class="grid">
+  <div class="tile"><h3>🧠 سؤال سريع</h3><p class="muted">اختبر معلوماتك</p><button class="btn" onclick="playQuiz()">ابدأ</button></div>
+  <div class="tile"><h3>🎲 حجر النرد</h3><p id="diceResult" class="muted">اضغط لرمي النرد</p><button class="btn" onclick="rollDice()">ارمِ النرد</button></div>
+  <div class="tile"><h3>✊ حجر ورقة مقص</h3><p class="muted">اختر حظك</p><button class="btn" onclick="rps()">العب</button></div>
  </div>
- <div class="card">⭐ المستوى: 1</div>
- <div class="card">💎 الماسات: 0</div>
- <div class="card">👑 VIP: غير مشترك</div>
- <div class="card">👨‍👩‍👧 العائلة: غير منضم</div>
- <div class="card">🎁 الهدايا: 0</div>
- <div class="card" onclick="notify('الإعدادات قيد التطوير')">⚙️ الإعدادات</div>
- <div class="card" onclick="notify('لوحة الإدارة تحتاج خادماً آمناً')">🛡️ لوحة الإدارة</div>
+</section>
+<section id="stories" class="page">
+ <div class="section-head"><h2>📚 القصص والروايات</h2><button class="btn" onclick="writeStory()">＋ اكتب قصة</button></div>
+ <div id="storyList" class="grid">
+  <article class="card"><span class="tag">قصة قصيرة</span><h3>نافذة الأمل</h3><p class="muted">في كل صباح فرصة جديدة لنبدأ من جديد...</p></article>
+  <article class="card"><span class="tag">خواطر</span><h3>صوت المساء</h3><p class="muted">بعض الحكايات تسكن القلب ولا تغادره...</p></article>
+ </div>
+</section>
+
+<section id="music" class="page">
+ <div class="section-head"><h2>🎵 الموسيقى</h2></div>
+ <div class="card">
+  <p class="muted">أضف رابط ملف صوتي تملك حق استخدامه أو رابطاً مرخصاً.</p>
+  <input id="audioUrl" class="field" placeholder="رابط ملف صوتي مباشر">
+  <div class="actions"><button class="btn" onclick="loadAudio()">تحميل وتشغيل</button></div>
+  <audio id="player" controls class="wide" style="margin-top:12px"></audio>
+ </div>
+</section>
+
+<section id="shop" class="page">
+ <div class="section-head"><h2>🎁 الهدايا والمتجر</h2><span class="tag">تجريبي</span></div>
+ <div class="card"><h3>رصيدك: <b id="shopCoins">500</b> 🪙</h3><p class="muted">هذه كوينز تجريبية داخل جهازك وليست رصيداً حقيقياً.</p></div>
+ <div class="section-head"><h2>هدايا الغرف</h2></div>
+ <div class="grid">
+  <div class="tile center"><div style="font-size:30px">🌹</div><b>وردة</b><p class="small">10 كوينز</p><button class="btn" onclick="buyGift('وردة','🌹',10)">إرسال</button></div>
+  <div class="tile center"><div style="font-size:30px">💖</div><b>قلب</b><p class="small">25 كوينز</p><button class="btn" onclick="buyGift('قلب','💖',25)">إرسال</button></div>
+  <div class="tile center"><div style="font-size:30px">👑</div><b>تاج</b><p class="small">100 كوينز</p><button class="btn" onclick="buyGift('تاج','👑',100)">إرسال</button></div>
+ </div>
+ <div class="card" style="margin-top:12px"><h3>⭐ عضوية VIP</h3><p class="muted">شارة VIP وديكور ملف شخصي للعرض فقط.</p><button class="btn pink" onclick="activateVip()">تفعيل VIP مجاناً</button><p id="vipStatus" class="small"></p></div>
+</section>
+<section id="profile" class="page">
+ <div class="section-head"><h2>👤 حسابي</h2></div>
+ <div class="card center"><div class="avatar" style="width:76px;height:76px;margin:auto;font-size:28px">A</div><h2>ضيف ABOUDSWO</h2><p class="muted">عضو جديد في المجتمع</p><span class="tag" id="vipBadge">عضوية مجانية</span></div>
+ <div class="card" style="margin-top:12px"><div class="list-row"><span>🪙 رصيد الكوينز</span><b id="profileCoins">500</b></div><div class="list-row"><span>🎁 الهدايا المرسلة</span><b id="giftCount">0</b></div><div class="list-row"><span>🏅 مستوى دعم الغرف</span><b id="supportLevel">1</b></div></div>
+ <div class="section-head"><h2>الإعدادات</h2></div><div class="card"><button class="btn secondary wide" onclick="showToast('إعدادات الحساب ستُربط بنظام تسجيل الدخول')">إعدادات الحساب</button><p class="small">هذه نسخة واجهة أولية؛ لا تحتوي بعد على تسجيل دخول أو حفظ سحابي.</p></div>
 </section>
 </main>
+<div class="footer-note">ABOUDSWO © مجتمعك الصوتي والترفيهي</div>
+</div>
 
-<nav>
- <button class="active" onclick="go('home',this)"><span>⌂</span>الرئيسية</button>
- <button onclick="go('rooms',this)"><span>🎧</span>الغرف</button>
- <button onclick="go('messages',this)"><span>✉</span>الرسائل</button>
- <button onclick="go('events',this)"><span>🎉</span>الأحداث</button>
- <button onclick="go('profile',this)"><span>👤</span>حسابي</button>
+<nav class="tabs">
+ <button class="tab active" data-page="home" onclick="go('home')"><span>🏠</span>الرئيسية</button>
+ <button class="tab" data-page="rooms" onclick="go('rooms')"><span>🎙️</span>الغرف</button>
+ <button class="tab" data-page="feed" onclick="go('feed')"><span>📝</span>النشر</button>
+ <button class="tab" data-page="messages" onclick="go('messages')"><span>💬</span>الرسائل</button>
+ <button class="tab" data-page="profile" onclick="go('profile')"><span>👤</span>حسابي</button>
 </nav>
-
-<!-- مكتبة LiveKit -->
-<script src="https://cdn.jsdelivr.net/npm/livekit-client/dist/livekit-client.umd.min.js"></script>
-
+<div class="modal" id="giftModal"><div class="modal-box"><div class="section-head"><h3>🎁 اختر هدية</h3><button class="pill" onclick="closeGifts()">✕</button></div><div class="gift-grid">
+<button class="gift" onclick="sendGift('وردة','🌹',10)"><b>🌹</b>10</button><button class="gift" onclick="sendGift('قلب','💖',25)"><b>💖</b>25</button><button class="gift" onclick="sendGift('تاج','👑',100)"><b>👑</b>100</button><button class="gift" onclick="sendGift('سيارة','🏎️',200)"><b>🏎️</b>200</button></div><p class="small">الهدايا تخصم من رصيد تجريبي محلي فقط.</p></div></div>
+<div class="toast" id="toast"></div>
 <script>
-// إعدادات الاتصال
-const SERVER_URL = "https://aboudswo-server.onrender.com";
-const LIVEKIT_URL = "wss://aboudswo-f8vzeflz.livekit.cloud";
-
+const SERVER_URL="https://aboudswo-server.onrender.com";
+const LIVEKIT_URL="wss://aboudswo-f8vzeflz.livekit.cloud";
+let coins=500,giftsSent=0,support=0,currentRoom=null,micOn=false,roomCount=0,roomChatLines=[];
 const rooms=[
- ['سهرة الأصدقاء','عبودswo','دردشة عامة','128','🎙️'],
- ['ليلة الطرب','نجم الليل','موسيقى','86','🎵'],
- ['تعارف وصداقات','الأميرة','تعارف','54','💜'],
- ['تحدي المعلومات','الذيب','مسابقات','42','🏆'],
- ['مجلس السوالف','أبو علي','مجلس عربي','31','☕']
+ {id:"friends",name:"سهرة الأصدقاء",desc:"جلسة ودية وسوالف جميلة",emoji:"🌙",users:18,level:1,mics:4},
+ {id:"music",name:"نغمات وذكريات",desc:"مساحة للموسيقى والحديث",emoji:"🎶",users:32,level:2,mics:6},
+ {id:"arab",name:"ديوانية العرب",desc:"تعارف ونقاشات ممتعة",emoji:"🏜️",users:11,level:1,mics:4}
 ];
-
-let coins=Number(localStorage.getItem('as_coins')||250);
-let liveRoom=null;
-let micEnabled=false;
-let connecting=false;
-
-function updateCoins(){
- document.getElementById('coins').textContent=coins;
-}
-
-function notify(t){
- const n=document.getElementById('notice');
- n.textContent=t;
- n.style.display='block';
- clearTimeout(window.timer);
- window.timer=setTimeout(()=>n.style.display='none',3000);
-}
-
-function go(id,btn){
- document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
- document.getElementById(id).classList.add('active');
- document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));
- if(btn)btn.classList.add('active');
- else{
-  const pages=['home','rooms','messages','events','profile'];
-  const i=pages.indexOf(id);
-  if(i>=0)document.querySelectorAll('nav button')[i].classList.add('active');
- }
- window.scrollTo(0,0);
-}
-
-function makeRoom(r){
- return `<div class="card row room" onclick="openRoom('${r[0]}')">
- <div class="icon">${r[4]}</div>
- <div class="grow"><b>${r[0]}</b>
- <div class="small">${r[2]} • المضيف: ${r[1]}</div></div>
- <div class="small">👥 ${r[3]}</div></div>`;
-}
-
-document.getElementById('homeRooms').innerHTML=rooms.slice(0,3).map(makeRoom).join('');
-document.getElementById('allRooms').innerHTML=rooms.map(makeRoom).join('');
-
-function setRoomStatus(message){
- document.getElementById('roomStatus').textContent=message;
-}
-
-function attachAudio(track){
- const element=track.attach();
- element.autoplay=true;
- element.style.display='none';
- document.body.appendChild(element);
-}
-
-async function openRoom(name){
- if(connecting){
-  notify('انتظر حتى يكتمل الاتصال');
-  return;
- }
-
- if(liveRoom){
-  await leaveRoom(false);
- }
-
- const selected=rooms.find(x=>x[0]===name);
- if(!selected)return;
-
- document.getElementById('roomTitle').textContent=selected[0];
- document.getElementById('roomHost').textContent='المضيف: '+selected[1];
- document.getElementById('seats').innerHTML=
- ['أنت','مقعد 2','مقعد 3','مقعد 4','مقعد 5','مقعد 6']
- .map((s,i)=>`<div class="seat"><div class="avatar">${i===0?'🎙️':'👤'}</div>${s}</div>`).join('');
-
- go('room');
- await connectRoom(name);
-}
-
-async function connectRoom(name){
- connecting=true;
- setRoomStatus('جارٍ الاتصال بالغرفة...');
- document.getElementById('micButton').disabled=true;
-
- try{
-  if(!window.LivekitClient){
-   throw new Error('لم يتم تحميل مكتبة الصوت. حدّث الصفحة وحاول مجدداً.');
-  }
-
-  let participantName=localStorage.getItem('as_name');
-  if(!participantName){
-   participantName=prompt('اكتب اسمك داخل الغرفة:');
-   if(!participantName || !participantName.trim()){
-    throw new Error('يجب كتابة اسم للدخول إلى الغرفة');
-   }
-   participantName=participantName.trim().slice(0,40);
-   localStorage.setItem('as_name',participantName);
-  }
-
-  const response=await fetch(
-   SERVER_URL+'/getToken?room='+encodeURIComponent(name)+
-   '&name='+encodeURIComponent(participantName)
-  );
-
-  if(!response.ok){
-   throw new Error('تعذر الحصول على رمز الدخول من الخادم');
-  }
-
-  const data=await response.json();
-  if(!data.token)throw new Error('لم يصل رمز الاتصال');
-
-  const room=new LivekitClient.Room();
-  liveRoom=room;
-
-  room.on(LivekitClient.RoomEvent.TrackSubscribed,(track)=>{
-   if(track.kind===LivekitClient.Track.Kind.Audio){
-    attachAudio(track);
-   }
-  });
-
-  room.on(LivekitClient.RoomEvent.TrackUnsubscribed,(track)=>{
-   track.detach().forEach(element=>element.remove());
-  });
-
-  room.on(LivekitClient.RoomEvent.Disconnected,()=>{
-   micEnabled=false;
-   document.getElementById('micButton').disabled=true;
-   document.getElementById('micButton').textContent='🎙️ تشغيل المايك';
-   setRoomStatus('تم قطع الاتصال');
-   liveRoom=null;
-  });
-
-  await room.connect(LIVEKIT_URL,data.token);
-
-  for(const participant of room.remoteParticipants.values()){
-   for(const publication of participant.trackPublications.values()){
-    if(publication.track &&
-       publication.track.kind===LivekitClient.Track.Kind.Audio){
-     attachAudio(publication.track);
-    }
-   }
-  }
-
-  await room.localParticipant.setMicrophoneEnabled(true);
-  micEnabled=true;
-
-  document.getElementById('micButton').disabled=false;
-  document.getElementById('micButton').textContent='🔇 إيقاف المايك';
-  setRoomStatus('متصل بالغرفة والصوت يعمل 🎉');
-  notify('تم دخول الغرفة بنجاح');
-
- }catch(error){
-  console.error(error);
-  if(liveRoom){
-   try{await liveRoom.disconnect();}catch(e){}
-   liveRoom=null;
-  }
-  setRoomStatus('تعذر الاتصال: '+error.message);
-  notify(error.message);
- }finally{
-  connecting=false;
- }
-}
-
-async function toggleMic(){
- if(!liveRoom){
-  notify('أنت غير متصل بالغرفة');
-  return;
- }
-
- try{
-  micEnabled=!micEnabled;
-  await liveRoom.localParticipant.setMicrophoneEnabled(micEnabled);
-  document.getElementById('micButton').textContent=
-   micEnabled?'🔇 إيقاف المايك':'🎙️ تشغيل المايك';
-  setRoomStatus(micEnabled?'الميكروفون يعمل 🎙️':'الميكروفون مغلق 🔇');
- }catch(error){
-  micEnabled=!micEnabled;
-  notify('لم نتمكن من تشغيل الميكروفون');
- }
-}
-
-async function leaveRoom(showMessage=true){
- if(liveRoom){
-  try{await liveRoom.disconnect();}catch(e){}
-  liveRoom=null;
- }
- micEnabled=false;
- connecting=false;
- document.getElementById('micButton').disabled=true;
- document.getElementById('micButton').textContent='🎙️ تشغيل المايك';
- setRoomStatus('تم الخروج من الغرفة');
- document.querySelectorAll('audio').forEach(a=>a.remove());
- go('rooms');
- if(showMessage)notify('خرجت من الغرفة');
-}
-
-function claim(){
- const today=new Date().toLocaleDateString();
- if(localStorage.getItem('as_reward')===today){
-  notify('استلمت مكافأة اليوم بالفعل');
-  return;
- }
- coins+=20;
- localStorage.setItem('as_coins',coins);
- localStorage.setItem('as_reward',today);
- updateCoins();
- document.getElementById('reward').disabled=true;
- document.getElementById('reward').textContent='تم الاستلام';
- notify('مبروك! حصلت على 20 كوين 🎁');
-}
-
-function initReward(){
- if(localStorage.getItem('as_reward')===new Date().toLocaleDateString()){
-  document.getElementById('reward').disabled=true;
-  document.getElementById('reward').textContent='تم الاستلام';
- }
-}
-
-let current='';
-function chat(name){
- current=name;
- document.getElementById('chatTitle').textContent=name;
- document.getElementById('chatMessages').innerHTML='<div class="small">مرحباً بك في عبودswo 👋</div>';
- go('chat');
-}
-
-function send(){
- const input=document.getElementById('message');
- const value=input.value.trim();
- if(!value)return;
- const line=document.createElement('div');
- line.style.cssText='background:#493363;padding:10px;border-radius:12px;margin:9px 0';
- line.textContent=value;
- document.getElementById('chatMessages').appendChild(line);
- input.value='';
- notify('رسالة تجريبية محفوظة على الشاشة فقط');
-}
-
-updateCoins();
-initReward();
+ function showToast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>t.classList.remove("show"),2800)}
+function go(id){document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));document.getElementById(id).classList.add("active");document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.page===id));if(id==="rooms")renderRooms();window.scrollTo({top:0,behavior:"smooth"})}
+function roomCard(r){return `<div class="tile room"><div class="room-top"><span class="room-icon">${r.emoji}</span><span class="live">● مباشر تجريبي</span></div><h3>${escapeHtml(r.name)}</h3><p>${escapeHtml(r.desc)}</p><div class="room-bottom"><span>👥 ${r.users} · 🎙️ ${r.mics} مايك</span><button class="btn" onclick="joinRoom('${r.id}')">دخول</button></div></div>`}
+function renderRooms(){document.getElementById("roomList").innerHTML=rooms.map(roomCard).join("");document.getElementById("homeRooms").innerHTML=rooms.slice(0,2).map(roomCard).join("")}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function createRoom(){const name=prompt("اكتب اسم الغرفة:");if(!name||!name.trim())return;const id="room"+(++roomCount);rooms.unshift({id,name:name.trim(),desc:"غرفة جديدة من إنشائك",emoji:"✨",users:1,level:1,mics:4});renderRooms();showToast("تم إنشاء غرفة تجريبية")}
+async function joinRoom(id){const r=rooms.find(x=>x.id===id);if(!r)return;currentRoom=r;document.getElementById("roomPanel").classList.remove("hidden");document.getElementById("roomTitle").textContent=r.emoji+" "+r.name;document.getElementById("roomMeta").textContent=`${r.users} مشارك · مستوى الدعم ${r.level}`;renderMics();document.getElementById("voiceStatus").textContent="جارٍ طلب رمز الدخول من الخادم...";go("rooms");await connectLiveKit(r)}
+function renderMics(){const r=currentRoom;document.getElementById("micSlots").innerHTML=Array.from({length:r.mics},(_,i)=>`<div class="mic"><strong>${i===0?"👤":"🎙️"}</strong>${i===0?"أنت":"مايك متاح"}</div>`).join("")}
+ async function connectLiveKit(r){try{const res=await fetch(`${SERVER_URL}/getToken?room=${encodeURIComponent(r.id)}&name=ABOUDSWO_Guest`);if(!res.ok)throw new Error("الخادم لم يصدر رمز الدخول ("+res.status+")");const data=await res.json();if(!data.token)throw new Error(data.error||"لم يصل رمز الدخول");if(!window.LivekitClient){document.getElementById("voiceStatus").textContent="تم استلام رمز الدخول، لكن مكتبة LiveKit غير متاحة في الواجهة. يلزم ضبط مكتبة العميل.";showToast("الخادم أصدر الرمز؛ نحتاج ضبط مكتبة الصوت");return}document.getElementById("voiceStatus").textContent="تم استلام رمز الدخول. يلزم اختبار اتصال العميل والمايك.";showToast("تم الوصول إلى خادم الرموز")}catch(e){document.getElementById("voiceStatus").textContent="تعذر الاتصال الصوتي: "+e.message;showToast("تعذر الاتصال. تحقق من إعدادات الخادم")}}
+function leaveRoom(){currentRoom=null;micOn=false;document.getElementById("roomPanel").classList.add("hidden");document.getElementById("micButton").textContent="🎤 تشغيل المايك";showToast("خرجت من الغرفة")}
+function toggleMic(){if(!currentRoom)return;micOn=!micOn;document.getElementById("micButton").textContent=micOn?"🔇 إيقاف المايك":"🎤 تشغيل المايك";showToast(micOn?"تم تفعيل حالة المايك في الواجهة":"تم إيقاف حالة المايك في الواجهة");document.getElementById("voiceStatus").textContent="حالة زر المايك تجريبية؛ لا يُبث الصوت حتى اكتمال ربط LiveKit Client."}
+function openGifts(){document.getElementById("giftModal").classList.add("show")}function closeGifts(){document.getElementById("giftModal").classList.remove("show")}
+function updateCoins(){["coinCount","shopCoins","profileCoins"].forEach(id=>document.getElementById(id).textContent=coins);document.getElementById("giftCount").textContent=giftsSent;document.getElementById("supportLevel").textContent=1+Math.floor(support/100)}
+ function sendGift(name,emoji,cost){if(coins<cost){showToast("رصيدك التجريبي لا يكفي");return}coins-=cost;giftsSent++;support+=cost;updateCoins();closeGifts();document.getElementById("roomChat").innerHTML+=`<p>${emoji} أرسلت هدية ${name} للغرفة!</p>`;if(currentRoom){currentRoom.level=1+Math.floor(support/100);currentRoom.mics=Math.min(12,4+Math.floor(support/100)*2);renderMics();document.getElementById("roomMeta").textContent=`${currentRoom.users} مشارك · مستوى الدعم ${currentRoom.level} · ${currentRoom.mics} مايكات (تجريبي)`}showToast("تم إرسال الهدية تجريبياً")}
+function buyGift(n,e,c){sendGift(n,e,c)}function supportRoom(){sendGift("دعم الغرفة","💛",10)}
+function sendRoomMessage(){const i=document.getElementById("roomMessage");if(!i.value.trim())return;document.getElementById("roomChat").innerHTML+=`<p>💬 أنت: ${escapeHtml(i.value)}</p>`;i.value=""}
+function publishPost(){const t=document.getElementById("postText"),v=t.value.trim();if(!v)return;const d=document.createElement("div");d.className="card";d.style.marginBottom="10px";d.innerHTML=`<div class="feed-item"><div class="avatar">A</div><div><b>ضيف ABOUDSWO</b><div class="small">الآن</div></div></div><p>${escapeHtml(v)}</p><div class="actions"><button class="pill" onclick="showToast('إعجاب تجريبي')">♡ إعجاب</button><button class="pill" onclick="showToast('التعليقات تحتاج قاعدة بيانات')">تعليق</button></div>`;document.getElementById("posts").prepend(d);t.value="";showToast("نُشر محلياً في هذه الصفحة")}
+function sendDM(){const i=document.getElementById("dmInput"),v=i.value.trim();if(!v)return;const d=document.createElement("p");d.textContent="أنت: "+v;document.getElementById("dmChat").append(d);i.value=""}
+ function addStory(){const t=prompt("اكتب نص قصتك:");if(!t)return;const b=document.createElement("button");b.className="story";b.textContent="✨";b.onclick=()=>showToast(t);document.getElementById("stories").append(b);showToast("أضيفت قصة تجريبية")}
+function writeStory(){const title=prompt("عنوان القصة:");if(!title)return;const body=prompt("اكتب بداية القصة:")||"";const d=document.createElement("div");d.className="card";d.style.marginTop="10px";d.innerHTML=`<span class="tag">من تأليف المجتمع</span><h3>${escapeHtml(title)}</h3><p>${escapeHtml(body)}</p>`;document.getElementById("storyList").prepend(d)}
+function playQuiz(){const q=[["ما عاصمة سوريا؟","دمشق"],["كم عدد أيام الأسبوع؟","7"],["ما الكوكب الأحمر؟","المريخ"]][Math.floor(Math.random()*3)];const a=prompt(q[0]);showToast(a&&a.trim()===q[1]?"إجابة صحيحة! 🎉":"الإجابة: "+q[1])}
+function rollDice(){document.getElementById("diceResult").textContent="🎲 "+(1+Math.floor(Math.random()*6))}
+function rps(){const a=["حجر ✊","ورقة ✋","مقص ✌️"];showToast("اختيارك: "+a[Math.floor(Math.random()*3)]+" — جولة تجريبية")}
+function loadAudio(){const u=document.getElementById("audioUrl").value.trim();if(!u)return showToast("أدخل رابط ملف صوتي أولاً");const p=document.getElementById("player");p.src=u;p.load();p.play().catch(()=>showToast("اضغط تشغيل من مشغل الصوت"))}
+function activateVip(){document.getElementById("vipStatus").textContent="تم تفعيل شارة VIP للعرض التجريبي";document.getElementById("vipBadge").textContent="⭐ VIP تجريبي";showToast("تم تفعيل VIP تجريبياً")}
+renderRooms();updateCoins();
 </script>
 </body>
 </html>
