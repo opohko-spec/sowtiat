@@ -2,53 +2,251 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SwoAbod - سوو عبود</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SwoAbod - سوو عبود الصوتية</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Cairo', sans-serif; background-color: #0f0c1b; color: #ffffff; }
+        body { font-family: 'Cairo', sans-serif; background-color: #0f0c1b; color: #ffffff; touch-action: manipulation; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #18132a; }
+        ::-webkit-scrollbar-thumb { background: #7c3aed; border-radius: 10px; }
     </style>
 </head>
-<body class="bg-[#0f0c1b] min-h-screen flex flex-col justify-between p-4">
-    <div class="max-w-md mx-auto w-full space-y-4">
-        <!-- Header -->
-        <div class="bg-[#18132a] p-4 rounded-2xl border border-purple-900/50 flex justify-between items-center shadow-lg">
-            <div class="flex items-center gap-3">
-                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150" class="w-12 h-12 rounded-full border-2 border-purple-500 object-cover">
-                <div>
-                    <h2 class="font-bold text-sm">عبود المالك</h2>
-                    <span class="text-xs bg-purple-950 text-purple-300 px-2 py-0.5 rounded-full">#ABOD99 • مدير</span>
+<body class="bg-[#0f0c1b] min-h-screen flex flex-col justify-between p-3 select-none">
+
+    <!-- Top Navigation Header -->
+    <header class="bg-[#18132a] border border-purple-900/40 rounded-2xl p-3 flex items-center justify-between shadow-lg">
+        <div class="flex items-center gap-2.5">
+            <div class="relative">
+                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150" class="w-10 h-10 rounded-full border-2 border-purple-500 object-cover">
+                <span class="absolute -bottom-1 -right-1 bg-amber-400 text-[8px] px-1 text-black font-black rounded-full">مدير</span>
+            </div>
+            <div>
+                <div class="flex items-center gap-1.5">
+                    <span class="font-bold text-xs text-white">عبود المالك</span>
+                    <span class="text-[9px] bg-purple-950 text-purple-300 px-1.5 py-0.2 rounded-full border border-purple-800">#ABOD99</span>
+                </div>
+                <div class="flex items-center gap-1 text-[11px] text-amber-400 mt-0.5 font-bold">
+                    <i class="fa-solid fa-coins text-[9px]"></i>
+                    <span id="user-coins">50,000</span> كوِنز
                 </div>
             </div>
-            <div class="text-amber-400 font-bold text-xs flex items-center gap-1 bg-amber-500/10 px-3 py-1.5 rounded-xl border border-amber-500/30">
-                <i class="fa-solid fa-coins"></i> 50,000
-            </div>
         </div>
+        <button onclick="alert('أهلاً بك يا عبود، أنت المدير العام وتتحكم بكافة صلاحيات المنصة!')" class="bg-gradient-to-r from-amber-500 to-red-600 text-white font-bold text-[11px] px-3 py-1.5 rounded-xl shadow flex items-center gap-1">
+            <i class="fa-solid fa-crown"></i> الدارة
+        </button>
+    </header>
 
-        <!-- Main Banner -->
-        <div class="bg-gradient-to-r from-purple-900 to-indigo-900 rounded-2xl p-5 text-center shadow-xl border border-purple-500/30 space-y-3">
-            <h3 class="font-bold text-base text-white">مرحباً بك في تطبيق SwoAbod 🎙️</h3>
-            <p class="text-xs text-purple-200">المنصة الصوتية المتكاملة للغرف والدردشة والدعم</p>
-            <button onclick="alert('أهلاً بك يا عبود، المنصة تعمل بكفاءة تامة!')" class="bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold text-xs px-6 py-2.5 rounded-xl shadow-lg">
-                دخول الغرف الصوتية
+    <!-- MAIN VIEW 1: HOME / ROOMS LIST -->
+    <main id="view-home" class="flex-1 space-y-3 mt-3">
+        <div class="bg-gradient-to-r from-purple-900 to-indigo-900 rounded-2xl p-4 flex justify-between items-center shadow-lg border border-purple-500/30">
+            <div>
+                <h3 class="font-bold text-xs text-white">افتح رومك الصوتي الآن 🎙️</h3>
+                <p class="text-[10px] text-purple-200 mt-0.5">تحدث بحرية بصوت عالٍ مع أصدقائك</p>
+            </div>
+            <button onclick="enterRoom('غرفة عبود الخاصة 🔥', 9088)" class="bg-gradient-to-r from-pink-500 to-purple-600 px-3.5 py-2 rounded-xl text-xs font-bold shadow text-white">
+                إنشاء غرفة
             </button>
         </div>
 
-        <!-- Rooms List -->
         <div class="space-y-2">
-            <h4 class="font-bold text-xs text-purple-300">الغرف النشطة حالياً:</h4>
-            <div class="bg-[#18132a] p-3 rounded-xl border border-purple-900/40 flex justify-between items-center">
-                <div>
-                    <h5 class="font-bold text-xs">روم عبود وسوماتش الرسمي 🔥</h5>
-                    <span class="text-[10px] text-emerald-400">18 متواجد الآن</span>
+            <h4 class="font-bold text-xs text-purple-300 flex items-center gap-1">
+                <i class="fa-solid fa-fire text-orange-500"></i> الغرف النشطة حالياً
+            </h4>
+
+            <!-- Room Item -->
+            <div onclick="enterRoom('روم عبود وسوماتش الرسمي 🔥', 9088)" class="bg-[#18132a] border border-purple-900/40 rounded-xl p-3 flex justify-between items-center cursor-pointer hover:border-purple-500 transition">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-purple-600/30 flex items-center justify-center text-purple-300">
+                        <i class="fa-solid fa-headphones"></i>
+                    </div>
+                    <div>
+                        <h5 class="font-bold text-xs text-white">روم عبود وسوماتش الرسمي 🔥</h5>
+                        <div class="flex items-center gap-2 mt-0.5">
+                            <span class="text-[9px] bg-purple-950 text-purple-300 px-1.5 rounded">ID: 9088</span>
+                            <span class="text-[9px] text-emerald-400 font-bold">18 متواجد الآن</span>
+                        </div>
+                    </div>
                 </div>
-                <button onclick="alert('جاري الدخول إلى الروم الصوتية...')" class="bg-purple-600/20 text-purple-300 text-xs px-3 py-1.5 rounded-lg border border-purple-600/40 font-bold">
-                    دخول
-                </button>
+                <span class="bg-purple-600/20 text-purple-300 text-xs px-3 py-1 rounded-lg border border-purple-600/40 font-bold">دخول</span>
+            </div>
+
+            <!-- Room Item 2 -->
+            <div onclick="enterRoom('جلسة شعر وشيلات 🎤', 4021)" class="bg-[#18132a] border border-purple-900/40 rounded-xl p-3 flex justify-between items-center cursor-pointer hover:border-purple-500 transition">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-amber-600/30 flex items-center justify-center text-amber-300">
+                        <i class="fa-solid fa-microphone"></i>
+                    </div>
+                    <div>
+                        <h5 class="font-bold text-xs text-white">جلسة شعر وشيلات 🎤</h5>
+                        <div class="flex items-center gap-2 mt-0.5">
+                            <span class="text-[9px] bg-purple-950 text-purple-300 px-1.5 rounded">ID: 4021</span>
+                            <span class="text-[9px] text-emerald-400 font-bold">12 متواجد الآن</span>
+                        </div>
+                    </div>
+                </div>
+                <span class="bg-purple-600/20 text-purple-300 text-xs px-3 py-1 rounded-lg border border-purple-600/40 font-bold">دخول</span>
             </div>
         </div>
-    </div>
+    </main>
+
+    <!-- MAIN VIEW 2: ACTIVE VOICE ROOM (Hidden by default, opens smoothly) -->
+    <main id="view-room" class="flex-1 space-y-3 mt-2 hidden">
+        <!-- Room Header -->
+        <div class="bg-[#18132a] rounded-xl p-2.5 border border-purple-800/40 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <button onclick="leaveRoom()" class="text-gray-400 hover:text-white px-1">
+                    <i class="fa-solid fa-chevron-right text-xs"></i>
+                </button>
+                <div>
+                    <h4 id="room-title-text" class="font-bold text-xs text-white">روم عبود وسوماتش الرسمي 🔥</h4>
+                    <span class="text-[9px] text-purple-300">ID: 9088 • مشرف غرفة الصوت</span>
+                </div>
+            </div>
+            <button onclick="leaveRoom()" class="bg-red-500/20 text-red-400 border border-red-500/40 text-[10px] px-2.5 py-1 rounded-lg font-bold">خروج</button>
+        </div>
+
+        <!-- 8 Microphones Seats Grid -->
+        <div class="bg-[#18132a]/80 rounded-2xl p-3 border border-purple-900/40">
+            <div class="flex justify-between items-center mb-2">
+                <span class="text-[10px] text-purple-300 font-bold flex items-center gap-1">
+                    <i class="fa-solid fa-microphone-lines text-pink-400"></i> مقاعد المايكات النشطة (8)
+                </span>
+                <span class="text-[9px] bg-pink-500/20 text-pink-300 px-2 py-0.5 rounded-full border border-pink-500/30">بث حي</span>
+            </div>
+
+            <div class="grid grid-cols-4 gap-2 text-center" id="mic-grid">
+                <!-- Seats generated via JS -->
+            </div>
+        </div>
+
+        <!-- Support Bar & Gift Button -->
+        <div class="bg-[#18132a] rounded-xl p-2.5 border border-purple-900/40 flex justify-between items-center text-xs">
+            <div class="flex items-center gap-1 text-amber-400">
+                <i class="fa-solid fa-trophy text-[11px]"></i>
+                <span class="font-bold text-[10px]">المايك الأكثر دعماً:</span>
+                <span class="text-white text-[10px] bg-purple-900/80 px-2 py-0.5 rounded-full font-bold">سارة (55%)</span>
+            </div>
+            <button onclick="sendSupportGift()" class="bg-gradient-to-r from-amber-500 to-pink-600 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg shadow">
+                <i class="fa-solid fa-gift"></i> ادعم المايك
+            </button>
+        </div>
+
+        <!-- Room Live Chat -->
+        <div class="bg-[#18132a]/90 rounded-xl p-3 border border-purple-900/40 flex flex-col justify-between h-44">
+            <div class="overflow-y-auto space-y-1.5 pr-1 text-[11px]" id="room-chat">
+                <div class="text-[9px] text-center text-purple-400 bg-purple-950/40 py-0.5 rounded">مرحباً بك في الغرفة الصوتية لـ سوو عبود!</div>
+                <div class="flex gap-1.5 items-start">
+                    <span class="font-bold text-amber-400">عبود [المالك]:</span>
+                    <span class="text-gray-200">أهلاً بالجميع، الصوت واضح عندكم على المايك؟</span>
+                </div>
+                <div class="flex gap-1.5 items-start">
+                    <span class="font-bold text-pink-400">سارة:</span>
+                    <span class="text-gray-200">أهلاً عبود، الصوت ممتااااز وواضح جداً 👏</span>
+                </div>
+            </div>
+
+            <div class="mt-2 flex gap-1.5">
+                <input type="text" id="chat-input" placeholder="اكتب رسالة..." class="flex-1 bg-purple-950/60 text-xs rounded-xl py-1.5 px-3 border border-purple-800 text-white focus:outline-none">
+                <button onclick="sendChatMessage()" class="bg-purple-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold">إرسال</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="bg-[#18132a] border-t border-purple-900/50 py-2 px-6 flex justify-around items-center rounded-2xl mt-3">
+        <button onclick="leaveRoom()" class="flex flex-col items-center gap-0.5 text-purple-400 font-bold text-xs">
+            <i class="fa-solid fa-headphones text-sm"></i>
+            <span class="text-[9px]">الغرف</span>
+        </button>
+        <button onclick="alert('قريباً: قسم الدردشة الخاصة والاتصالات الصوتية 1-على-1')" class="flex flex-col items-center gap-0.5 text-gray-400 hover:text-white text-xs">
+            <i class="fa-solid fa-comments text-sm"></i>
+            <span class="text-[9px]">الدردشات</span>
+        </button>
+        <button onclick="buyCoinsPrompt()" class="flex flex-col items-center gap-0.5 text-gray-400 hover:text-white text-xs">
+            <i class="fa-solid fa-store text-sm"></i>
+            <span class="text-[9px]">المتجر</span>
+        </button>
+        <button onclick="alert('حسابك: عبود المالك | المدير العام للمنصة')" class="flex flex-col items-center gap-0.5 text-gray-400 hover:text-white text-xs">
+            <i class="fa-solid fa-user text-sm"></i>
+            <span class="text-[9px]">حسابي</span>
+        </button>
+    </nav>
+
+    <!-- JavaScript Engine -->
+    <script>
+        var micSeatsData = [
+            { id: 1, name: "عبود المالك", avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150", support: 55, active: true },
+            { id: 2, name: "سارة 🌸", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150", support: 30, active: true },
+            { id: 3, name: "أحمد الصوافا", avatar: "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=150", support: 15, active: true },
+            { id: 4, name: "فارغ", avatar: "", support: 0, active: false },
+            { id: 5, name: "فارغ", avatar: "", support: 0, active: false },
+            { id: 6, name: "فارغ", avatar: "", support: 0, active: false },
+            { id: 7, name: "فارغ", avatar: "", support: 0, active: false },
+            { id: 8, name: "فارغ", avatar: "", support: 0, active: false }
+        ];
+
+        function enterRoom(title, id) {
+            document.getElementById('room-title-text').innerText = title;
+            document.getElementById('view-home').classList.add('hidden');
+            document.getElementById('view-room').classList.remove('hidden');
+            renderMicGrid();
+        }
+
+        function leaveRoom() {
+            document.getElementById('view-room').classList.add('hidden');
+            document.getElementById('view-home').classList.remove('hidden');
+        }
+
+        function renderMicGrid() {
+            var grid = document.getElementById('mic-grid');
+            if(!grid) return;
+            grid.innerHTML = '';
+
+            for(var i=0; i<micSeatsData.length; i++) {
+                var seat = micSeatsData[i];
+                var seatDiv = document.createElement('div');
+                seatDiv.className = "bg-purple-950/40 p-1.5 rounded-xl border border-purple-800/40 flex flex-col items-center";
+
+                if(seat.active) {
+                    seatDiv.innerHTML = 
+                        '<div class="w-full bg-gray-800 h-1 rounded-full mb-1 overflow-hidden"><div class="bg-pink-500 h-full" style="width: ' + seat.support + '%"></div></div>' +
+                        '<img src="' + seat.avatar + '" class="w-8 h-8 rounded-full border border-purple-400 object-cover">' +
+                        '<span class="text-[9px] font-bold text-white mt-0.5 truncate w-full">' + seat.name + '</span>' +
+                        '<span class="text-[8px] text-amber-400 font-bold">' + seat.support + '%</span>';
+                } else {
+                    seatDiv.innerHTML = 
+                        '<div class="w-full bg-gray-800 h-1 rounded-full mb-1"></div>' +
+                        '<div class="w-8 h-8 rounded-full bg-purple-900/30 border border-purple-700/40 flex items-center justify-center text-purple-400 text-xs"><i class="fa-solid fa-plus"></i></div>' +
+                        '<span class="text-[9px] text-gray-500 mt-0.5">خالي</span>' +
+                        '<span class="text-[8px] text-gray-600">0%</span>';
+                }
+                grid.appendChild(seatDiv);
+            }
+        }
+
+        function sendSupportGift() {
+            micSeatsData[1].support += 10;
+            renderMicGrid();
+            var chat = document.getElementById('room-chat');
+            chat.innerHTML += '<div class="text-pink-300 font-bold text-[10px]">🎁 أرسل عبود هدية دعم للمايك وزادت نسبة الدعم!</div>';
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        function sendChatMessage() {
+            var input = document.getElementById('chat-input');
+            if(!input.value.trim()) return;
+            var chat = document.getElementById('room-chat');
+            chat.innerHTML += '<div class="flex gap-1.5 items-start"><span class="font-bold text-amber-400">عبود:</span><span class="text-gray-200">' + input.value + '</span></div>';
+            input.value = '';
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        function buyCoinsPrompt() {
+            alert("متجر الكوينز: رصيدك الحالي 50,000 كوينز. يمكنك الشحن في أي وقت!");
+        }
+    </script>
 </body>
 </html>
