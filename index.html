@@ -18,7 +18,7 @@
 </head>
 <body class="bg-[#0b0716] min-h-screen flex flex-col justify-between p-3 select-none">
 
-    <!-- NAME LOGIN MODAL -->
+    <!-- NAME LOGIN MODAL (تم تصحيح الحقل والزر ليعملان فوراً) -->
     <div id="auth-screen" class="fixed inset-0 bg-black/95 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="glass-box w-full max-w-sm rounded-3xl p-6 space-y-4 text-center shadow-2xl">
             <div class="w-20 h-20 rounded-full bg-gradient-to-tr from-purple-600 via-pink-500 to-amber-400 flex items-center justify-center mx-auto text-3xl text-white shadow-xl">
@@ -29,9 +29,9 @@
                 <p class="text-xs text-purple-300 mt-1">أدخل اسمك المستعار للدخول الفوري للغرفة</p>
             </div>
             <div class="space-y-3 text-right">
-                <input type="text" id="reg-name" placeholder="أدخل اسمك هنا..." class="w-full bg-purple-950/60 border border-purple-700/50 rounded-xl py-3 px-3 text-xs text-white focus:outline-none focus:border-pink-500 text-center font-bold">
+                <input type="text" id="reg-name" value="عبود" class="w-full bg-purple-950/80 border-2 border-pink-500 rounded-xl py-3 px-3 text-sm text-white focus:outline-none text-center font-black">
             </div>
-            <button onclick="loginWithName()" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-black text-xs py-3 rounded-xl shadow-lg transition hover:scale-105">
+            <button onclick="loginWithName()" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-black text-xs py-3.5 rounded-xl shadow-lg transition active:scale-95">
                 دخول المنصة وتفعيل الصوت 🚀
             </button>
         </div>
@@ -55,11 +55,11 @@
                 </div>
             </div>
         </div>
-        <button onclick="alert('منصة SwoAbod مجهزة بالكامل لتنافس وتتفوق على سوماتش!')" class="bg-gradient-to-r from-amber-500 to-red-600 text-white font-bold text-[11px] px-3 py-1.5 rounded-xl shadow flex items-center gap-1">
+        <button onclick="alert('منصة SwoAbod مجهزة بالكامل لعبود!')" class="bg-gradient-to-r from-amber-500 to-red-600 text-white font-bold text-[11px] px-3 py-1.5 rounded-xl shadow flex items-center gap-1">
             <i class="fa-solid fa-crown"></i> الإدارة
         </button>
     </header>
-    <!-- 1. TAB: ROOMS (الرئيسية والغرف) -->
+    <!-- 1. TAB: ROOMS -->
     <main id="tab-rooms" class="flex-1 space-y-3 mt-3">
         <div class="bg-gradient-to-r from-purple-900 to-indigo-900 rounded-2xl p-4 flex justify-between items-center shadow-xl border border-purple-500/30">
             <div>
@@ -82,7 +82,7 @@
         </div>
     </main>
 
-    <!-- ACTIVE ROOM VIEW (الغرفة النشطة والمايكات) -->
+    <!-- ACTIVE ROOM VIEW -->
     <main id="view-active-room" class="flex-1 space-y-3 mt-2 hidden">
         <div class="glass-box rounded-xl p-2.5 flex justify-between items-center">
             <div class="flex items-center gap-2">
@@ -97,7 +97,7 @@
             <button onclick="leaveActiveRoom()" class="bg-red-500/20 text-red-300 border border-red-500/40 text-[10px] px-3 py-1 rounded-lg font-bold">خروج</button>
         </div>
 
-        <!-- 8 Microphones Grid (مع إشارة + واضحة للمايك الفارغ) -->
+        <!-- 8 Microphones Grid -->
         <div class="glass-box rounded-2xl p-3 shadow-lg">
             <div class="flex justify-between items-center mb-2">
                 <span class="text-[10px] text-purple-300 font-bold flex items-center gap-1">
@@ -131,7 +131,7 @@
         </div>
     </main>
 
-    <!-- 2. TAB: MOMENTS (نشر الصور والفيديوهات للجميع) -->
+    <!-- 2. TAB: MOMENTS -->
     <main id="tab-moments" class="flex-1 space-y-3 mt-3 hidden">
         <div class="glass-box rounded-2xl p-3 flex justify-between items-center shadow-lg">
             <div>
@@ -207,7 +207,7 @@
         </button>
     </nav>
 
-    <!-- SCRIPT ENGINE WITH SPEECH SYNTHESIS -->
+    <!-- SCRIPT ENGINE -->
     <script>
         var myUser = { name: "", id: "", coins: 1000, isAdmin: false };
         var micSeats = [
@@ -275,7 +275,7 @@
         function speakText(text) {
             if ('speechSynthesis' in window) {
                 let utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = 'ar-SA'; // اللغة العربية للصوت
+                utterance.lang = 'ar-SA';
                 utterance.rate = 1.0;
                 window.speechSynthesis.speak(utterance);
             }
@@ -327,7 +327,6 @@
             enterRoom(roomTitle, randomId);
         }
 
-        // رسم المايكات مع إشارة (+) واضحة للمايك الفارغ
         function renderMicGrid() {
             var grid = document.getElementById('mic-grid');
             grid.innerHTML = '';
@@ -407,4 +406,7 @@
         }
 
         function triggerAIBotWelcome(username) {
-            let welcomeMsg = "هلا والله منورنا يا "
+            let welcomeMsg = "هلا والله منورنا يا " + username + " في غرفة المالك عبود! نورتنا وشرفتنا";
+            speakText(welcomeMsg);
+            var msgs = JSON.parse(localStorage.getItem('swo_chat_msgs') || '[]');
+            msgs.push({ name: "🤖 سارة"
