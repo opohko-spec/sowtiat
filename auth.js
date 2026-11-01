@@ -1,271 +1,176 @@
 import { createClient } from
   "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
-const SUPABASE_URL =
-  "https://toosuyejhjevaxmqzwkv.supabase.co";
+const SUPABASE_URL = "https://toosuyejhjevaxmqzwkv.supabase.co";
+const SUPABASE_KEY = "sb_publishable_0ZBINmMPhDTNZjJ_nYC7Gg_hWUZTYHL";
+const SERVER_URL = "https://aboudswo-server.onrender.com";
+const INTERNAL_DOMAIN = "accounts.aboudswo.local";
 
-const SUPABASE_KEY =
-  "sb_publishable_0ZBINmMPhDTNZjJ_nYC7Gg_hWUZTYHL";
-
-const SERVER_URL =
-  "https://aboudswo-server.onrender.com";
-
-const supabase = createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY,
-  {
-    auth: {
-      persistSession: true,
-      autoRefreshToken: true,
-      detectSessionInUrl: true
-    }
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+    detectSessionInUrl: true
   }
-);
+});
 
 window.aboudswoSupabase = supabase;
 
 const style = document.createElement("style");
 style.textContent = `
-#ab-auth {
-  position:fixed; inset:0; z-index:99999;
-  background:rgba(0,0,0,.94);
-  display:flex; align-items:center;
-  justify-content:center; padding:18px;
-  direction:rtl; font-family:Arial,sans-serif;
-}
-#ab-auth .panel {
-  width:100%; max-width:390px;
-  background:#171717; border:1px solid #c9a43b;
-  border-radius:18px; padding:25px;
-  color:white; text-align:center;
-}
-#ab-auth h2 {color:#e5bd52;margin:5px 0 20px}
-#ab-auth input {
-  width:100%; box-sizing:border-box;
-  padding:14px; margin:7px 0;
-  border:1px solid #555; border-radius:9px;
-  background:#242424;color:white;font-size:15px;
-}
-#ab-auth button {
-  width:100%; padding:13px; margin-top:10px;
-  border:0;border-radius:9px;
-  background:#d5ad43;color:#111;
-  font-weight:bold;font-size:15px;cursor:pointer;
-}
-#ab-auth .secondary {
-  background:#333;color:white;
-}
-#ab-auth .message {
-  color:#f0cc68; font-size:13px;
-  min-height:22px; margin-top:12px;
-}
-#ab-logout {
-  background:#333;color:white;border:1px solid #c9a43b;
-  padding:8px 12px;border-radius:8px;
-  cursor:pointer;margin:8px;
-}
+#ab-auth{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;
+justify-content:center;padding:18px;background:radial-gradient(ellipse at top,#38270d,#090909 65%);
+direction:rtl;font-family:Cairo,Arial,sans-serif}
+#ab-auth .panel{width:100%;max-width:390px;padding:27px;background:#171717;
+border:1px solid #80632b;border-radius:22px;color:#f8f4e9;text-align:center;
+box-shadow:0 20px 70px #000}
+#ab-auth .crown{font-size:36px;color:#f2d994}
+#ab-auth h2{margin:5px 0;color:#f2d994}
+#ab-auth p{color:#aaa18f;margin:0 0 20px}
+#ab-auth input{width:100%;box-sizing:border-box;padding:13px;margin:7px 0;
+border:1px solid #40331d;border-radius:11px;background:#0d0d0d;color:white;
+font:inherit;outline:none}
+#ab-auth input:focus{border-color:#d7b15a}
+#ab-auth button{width:100%;padding:13px;margin-top:10px;border:0;border-radius:11px;
+background:linear-gradient(135deg,#f2d994,#bd8d38);color:#17120a;
+font:inherit;font-weight:800;cursor:pointer}
+#ab-auth button.secondary{background:#24211b;border:1px solid #40331d;color:#f2d994}
+#ab-auth .switch{margin-top:17px;color:#d7b15a;cursor:pointer;font-size:13px}
+#ab-auth .message{min-height:22px;margin-top:12px;color:#f2d994;font-size:13px}
+#ab-logout{background:#24211b;color:#f2d994;border:1px solid #80632b;
+padding:8px 12px;border-radius:9px;cursor:pointer;margin:8px}
 `;
 document.head.appendChild(style);
 
-function showAuth() {
-  if (document.getElementById("ab-auth")) return;
+function usernameEmail(username) {
+  return `${username.toLowerCase()}@${INTERNAL_DOMAIN}`;
+}
+
+function showAuth(mode = "login") {
+  document.getElementById("ab-auth")?.remove();
 
   const overlay = document.createElement("div");
   overlay.id = "ab-auth";
 
-  overlay.innerHTML = `
-    <div class="panel">
-      <h2>👑 عبود الملك</h2>
-      <p>مرحباً بك في ABOUDSWO</p>
+  function render() {
+    const registering = mode === "register";
 
-      <input id="ab-identity"
-        placeholder="البريد الإلكتروني أو اسم المستخدم"
-        autocomplete="username">
+    overlay.innerHTML = `
+      <div class="panel">
+        <div class="crown">♛</div>
+        <h2>عبود الملك</h2>
+        <p>${registering ? "أنشئ حسابك وابدأ رحلتك" : "مرحباً بعودتك إلى ABOUDSWO"}</p>
 
-      <input id="ab-password" type="password"
-        placeholder="كلمة المرور"
-        autocomplete="current-password">
+        <input id="ab-username" placeholder="اسم المستخدم"
+          autocomplete="username" maxlength="20">
 
-      <button id="ab-login">تسجيل الدخول</button>
+        <input id="ab-password" type="password"
+          placeholder="كلمة المرور" autocomplete="current-password">
 
-      <hr style="border-color:#444;margin:20px 0">
+        ${registering ? `
+          <input id="ab-confirm" type="password"
+            placeholder="تأكيد كلمة المرور" autocomplete="new-password">
+        ` : ""}
 
-      <input id="ab-email" type="email"
-        placeholder="البريد الإلكتروني">
+        <button id="ab-submit">${registering ? "إنشاء الحساب" : "دخول"}</button>
 
-      <input id="ab-username"
-        placeholder="اسم المستخدم">
+        <div class="switch" id="ab-switch">
+          ${registering ? "لديك حساب؟ سجّل الدخول" : "ليس لديك حساب؟ إنشاء حساب جديد"}
+        </div>
+        <div class="message" id="ab-message"></div>
+      </div>
+    `;
 
-      <input id="ab-new-password" type="password"
-        placeholder="كلمة المرور">
-
-      <button id="ab-register">إنشاء حساب جديد</button>
-
-      <button id="ab-reset" class="secondary">
-        نسيت كلمة المرور؟
-      </button>
-
-      <div class="message" id="ab-message"></div>
-    </div>
-  `;
-
-  document.body.appendChild(overlay);
-
-  const message = text =>
-    document.getElementById("ab-message").textContent = text;
-
-  document.getElementById("ab-login").onclick =
-    async () => {
-      const identity =
-        document.getElementById("ab-identity").value.trim();
-      const password =
-        document.getElementById("ab-password").value;
-
-      if (!identity || !password) {
-        return message("أدخل اسم المستخدم أو البريد وكلمة المرور");
-      }
-
-      message("جارٍ تسجيل الدخول...");
-
-      try {
-        let result;
-
-        if (identity.includes("@")) {
-          result = await supabase.auth.signInWithPassword({
-            email: identity,
-            password
-          });
-        } else {
-          const response = await fetch(
-            SERVER_URL + "/login-username",
-            {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                username: identity.toLowerCase(),
-                password
-              })
-            }
-          );
-
-          const data = await response.json();
-
-          if (!response.ok || !data.session) {
-            throw new Error(data.error || "تعذر تسجيل الدخول");
-          }
-
-          result = await supabase.auth.setSession({
-            access_token: data.session.access_token,
-            refresh_token: data.session.refresh_token
-          });
-        }
-
-        if (result.error) throw result.error;
-
-        message("تم تسجيل الدخول بنجاح");
-        overlay.remove();
-        await onAuthenticated(result.data.session?.user);
-
-      } catch (error) {
-        message(error.message || "حدث خطأ أثناء الدخول");
-      }
+    overlay.querySelector("#ab-switch").onclick = () => {
+      mode = registering ? "login" : "register";
+      render();
     };
 
-  document.getElementById("ab-register").onclick =
-    async () => {
-      const email =
-        document.getElementById("ab-email").value.trim();
-      const username =
-        document.getElementById("ab-username")
-          .value.trim().toLowerCase();
-      const password =
-        document.getElementById("ab-new-password").value;
-
-      if (!email || !username || !password) {
-        return message("يرجى تعبئة جميع الحقول");
-      }
+    overlay.querySelector("#ab-submit").onclick = async () => {
+      const username = overlay.querySelector("#ab-username").value.trim().toLowerCase();
+      const password = overlay.querySelector("#ab-password").value;
+      const message = overlay.querySelector("#ab-message");
+      const say = text => message.textContent = text;
 
       if (!/^[a-z0-9_]{3,20}$/.test(username)) {
-        return message(
-          "اسم المستخدم: أحرف إنجليزية وأرقام وشرطة سفلية، من 3 إلى 20"
-        );
+        return say("اسم المستخدم من 3 إلى 20 حرفاً إنجليزياً أو رقماً أو _");
       }
 
       if (password.length < 8) {
-        return message("كلمة المرور يجب أن تكون 8 أحرف على الأقل");
+        return say("كلمة المرور يجب أن تكون 8 أحرف على الأقل");
       }
 
-      message("جارٍ إنشاء الحساب...");
+      say(registering ? "جارٍ إنشاء الحساب..." : "جارٍ تسجيل الدخول...");
 
       try {
-        const { data, error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            data: {
-              username,
-              display_name: username
-            }
+        if (registering) {
+          const confirm = overlay.querySelector("#ab-confirm").value;
+          if (password !== confirm) {
+            return say("كلمتا المرور غير متطابقتين");
           }
-        });
 
-        if (error) throw error;
-
-        if (!data.user) {
-          throw new Error("لم يتم إنشاء الحساب");
-        }
-
-        const { error: usernameError } = await supabase
-          .from("aboudswo_usernames")
-          .insert({
-            user_id: data.user.id,
-            username
+          const { data, error } = await supabase.auth.signUp({
+            email: usernameEmail(username),
+            password,
+            options: {
+              data: {
+                username,
+                display_name: username
+              }
+            }
           });
 
-        if (usernameError) {
-          throw new Error(
-            usernameError.code === "23505"
-              ? "اسم المستخدم مستخدم مسبقاً"
-              : "تم إنشاء الحساب، لكن تعذر حفظ اسم المستخدم: " +
-                usernameError.message
-          );
-        }
+          if (error) throw error;
+          if (!data.user) throw new Error("لم يتم إنشاء الحساب");
 
-        if (data.session) {
+          const { error: usernameError } = await supabase
+            .from("aboudswo_usernames")
+            .insert({ user_id: data.user.id, username });
+
+          if (usernameError) {
+            throw new Error(
+              usernameError.code === "23505"
+                ? "اسم المستخدم مستخدم مسبقاً"
+                : "تعذر حفظ اسم المستخدم: " + usernameError.message
+            );
+          }
+
+          if (!data.session) {
+            return say("الحساب أُنشئ، لكن Supabase ما زال يطلب تأكيداً. تأكد أن تأكيد البريد معطّل في إعدادات المشروع.");
+          }
+
           overlay.remove();
           await onAuthenticated(data.user);
         } else {
-          message(
-            "تم إنشاء الحساب. تحقق من إعدادات تأكيد البريد إذا طُلب منك ذلك."
-          );
-        }
+          const response = await fetch(SERVER_URL + "/login-username", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password })
+          });
 
+          const result = await response.json();
+          if (!response.ok || !result.session) {
+            throw new Error(result.error || "اسم المستخدم أو كلمة المرور غير صحيحة");
+          }
+
+          const { data, error } = await supabase.auth.setSession({
+            access_token: result.session.access_token,
+            refresh_token: result.session.refresh_token
+          });
+
+          if (error) throw error;
+
+          overlay.remove();
+          await onAuthenticated(data.session?.user);
+        }
       } catch (error) {
-        message(error.message || "تعذر إنشاء الحساب");
+        say(error.message || "حدث خطأ، حاول مرة أخرى");
       }
     };
+  }
 
-  document.getElementById("ab-reset").onclick =
-    async () => {
-      const email =
-        document.getElementById("ab-email").value.trim();
-
-      if (!email) {
-        return message("اكتب بريدك الإلكتروني أولاً");
-      }
-
-      const { error } = await supabase.auth.resetPasswordForEmail(
-        email,
-        {
-          redirectTo:
-            "https://opohko-spec.github.io/sowtiat/"
-        }
-      );
-
-      message(
-        error ? error.message : "إذا كان البريد مسجلاً، ستصلك تعليمات الاستعادة."
-      );
-    };
+  document.body.appendChild(overlay);
+  render();
 }
 
 async function onAuthenticated(user) {
@@ -282,11 +187,9 @@ async function onAuthenticated(user) {
 
   addLogoutButton();
 
-  window.dispatchEvent(
-    new CustomEvent("aboudswo-user-authenticated", {
-      detail: { user }
-    })
-  );
+  window.dispatchEvent(new CustomEvent("aboudswo-user-authenticated", {
+    detail: { user }
+  }));
 
   if (typeof window.loadRooms === "function") {
     window.loadRooms();
@@ -302,29 +205,18 @@ function addLogoutButton() {
 
   button.onclick = async () => {
     const { error } = await supabase.auth.signOut();
-
-    if (error) {
-      alert("تعذر تسجيل الخروج: " + error.message);
-      return;
-    }
-
+    if (error) return alert("تعذر تسجيل الخروج: " + error.message);
     location.reload();
   };
 
   const profile = document.getElementById("profileName");
-  if (profile?.parentElement) {
-    profile.parentElement.appendChild(button);
-  } else {
-    document.body.appendChild(button);
-  }
+  if (profile?.parentElement) profile.parentElement.appendChild(button);
+  else document.body.appendChild(button);
 }
 
 async function initializeAuth() {
   const { data, error } = await supabase.auth.getSession();
-
-  if (error) {
-    console.error("Auth session error:", error);
-  }
+  if (error) console.error("Auth session error:", error);
 
   if (data.session?.user) {
     await onAuthenticated(data.session.user);
@@ -335,17 +227,13 @@ async function initializeAuth() {
   window.dispatchEvent(new Event("aboudswo-ready"));
 }
 
-supabase.auth.onAuthStateChange(
-  async (event, session) => {
-    if (event === "SIGNED_IN" && session?.user) {
-      document.getElementById("ab-auth")?.remove();
-      await onAuthenticated(session.user);
-    }
-
-    if (event === "SIGNED_OUT") {
-      showAuth();
-    }
+supabase.auth.onAuthStateChange(async (event, session) => {
+  if (event === "SIGNED_IN" && session?.user) {
+    document.getElementById("ab-auth")?.remove();
+    await onAuthenticated(session.user);
   }
-);
+
+  if (event === "SIGNED_OUT") showAuth();
+});
 
 initializeAuth();
