@@ -1,16 +1,16 @@
-
 const express = require("express");
 const cors = require("cors");
 const { AccessToken } = require("livekit-server-sdk");
 
 const app = express();
 
-const SUPABASE_URL = "https://toosuyejhjevaxmqzwkv.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_dmfTP6ASq8dweQQ37t-5uQ_11wJWOeF";
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_PUBLISHABLE_KEY = process.env.SUPABASE_PUBLISHABLE_KEY;
 
 app.use(cors({
   origin: "https://opohko-spec.github.io"
 }));
+
 app.use(express.json());
 
 app.get("/", (req, res) => {
@@ -18,28 +18,52 @@ app.get("/", (req, res) => {
 });
 
 app.get("/getToken", async (req, res) => {
+
+  console.log("ABOUDSWO: طلب دخول غرفة", {
+    room: req.query.room,
+    hasAuthorization: Boolean(req.headers.authorization)
+  });
+
   try {
-    console.log("ABOUDSWO: طلب دخول غرفة", {
-  room: req.query.room,
-  hasAuthorization: Boolean(req.headers.authorization)
-});
     const roomName = String(req.query.room || "");
+
     const authHeader = req.headers.authorization || "";
+
     const accessToken = authHeader.startsWith("Bearer ")
       ? authHeader.slice(7)
       : "";
 
     if (!/^[a-zA-Z0-9_-]{1,80}$/.test(roomName)) {
-      return res.status(400).json({ error: "Invalid room name" });
+      console.log("ABOUDSWO: اسم الغرفة غير صالح");
+
+      return res.status(400).json({
+        error: "Invalid room name"
+      });
     }
 
     if (!accessToken) {
-      return res.status(401).json({ error: "Sign in is required" });
+      console.log("ABOUDSWO: لا يوجد رمز جلسة");
+
+      return res.status(401).json({
+        error: "Sign in is required"
+      });
+    }
+
+    if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
+      console.error("ABOUDSWO: إعدادات Supabase ناقصة", {
+        hasSupabaseUrl: Boolean(SUPABASE_URL),
+        hasPublishableKey: Boolean(SUPABASE_PUBLISHABLE_KEY)
+      });
+
+      return res.status(500).json({
+        error: "Supabase server configuration missing"
+      });
     }
 
     const authResponse = await fetch(
       `${SUPABASE_URL}/auth/v1/user`,
       {
+        method: "GET",
         headers: {
           apikey: SUPABASE_PUBLISHABLE_KEY,
           Authorization: `Bearer ${accessToken}`
@@ -48,6 +72,10 @@ app.get("/getToken", async (req, res) => {
     );
 
     if (!authResponse.ok) {
+      console.error("ABOUDSWO: فشل التحقق من Supabase", {
+        status: authResponse.status
+      });
+
       return res.status(401).json({
         error: "Your session is invalid or expired"
       });
@@ -55,16 +83,25 @@ app.get("/getToken", async (req, res) => {
 
     const user = await authResponse.json();
 
-    if (!user?.id) {
+    if (!user || !user.id) {
+      console.error("ABOUDSWO: تعذر معرفة المستخدم");
+
       return res.status(401).json({
         error: "Unable to verify account"
       });
     }
 
+    console.log("ABOUDSWO: تم التحقق من حساب المستخدم");
+
     const apiKey = process.env.LIVEKIT_API_KEY;
     const apiSecret = process.env.LIVEKIT_API_SECRET;
 
     if (!apiKey || !apiSecret) {
+      console.error("ABOUDSWO: إعدادات LiveKit ناقصة", {
+        hasApiKey: Boolean(apiKey),
+        hasApiSecret: Boolean(apiSecret)
+      });
+
       return res.status(500).json({
         error: "LiveKit server configuration missing"
       });
@@ -89,13 +126,25 @@ app.get("/getToken", async (req, res) => {
       canPublishData: true
     });
 
-    res.json({
-      token: await token.toJwt()
+    const jwt = await token.toJwt();
+
+    console.log("ABOUDSWO: تم إنشاء رمز دخول LiveKit", {
+      room: roomName,
+      userId: user.id
+    });
+
+    return res.json({
+      token: jwt
     });
 
   } catch (error) {
-    console.error("LiveKit token error:", error);
-    res.status(500).json({
+
+    console.error("ABOUDSWO: خطأ أثناء إنشاء رمز LiveKit", {
+      name: error?.name,
+      message: error?.message
+    });
+
+    return res.status(500).json({
       error: "Could not create token"
     });
   }
