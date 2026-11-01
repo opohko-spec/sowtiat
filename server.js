@@ -19,6 +19,10 @@ app.get("/", (req, res) => {
 
 app.get("/getToken", async (req, res) => {
   try {
+    console.log("ABOUDSWO: طلب دخول غرفة", {
+  room: req.query.room,
+  hasAuthorization: Boolean(req.headers.authorization)
+});
     const roomName = String(req.query.room || "");
     const authHeader = req.headers.authorization || "";
     const accessToken = authHeader.startsWith("Bearer ")
