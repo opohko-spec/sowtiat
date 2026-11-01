@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
@@ -106,56 +107,478 @@
 <button class="gift" onclick="sendGift('سيارة','🏎️',200)"><b>🏎️</b>200</button>
 </div><p class="small">الهدايا تخصم من رصيد تجريبي محلي فقط.</p></div></div>
 <div class="toast" id="toast"></div>
+
 <script>
 const SERVER_URL="https://aboudswo-server.onrender.com";
 const LIVEKIT_URL="wss://aboudswo-f8vzeflz.livekit.cloud";
-let coins=500,giftsSent=0,support=0,currentRoom=null,micOn=false,roomCount=0,liveKitRoom=null,liveKitConnected=false,roomChatLines=[];
-const rooms=[
-{id:"friends",name:"سهرة الأصدقاء",desc:"جلسة ودية وسوالف جميلة",emoji:"🌙",users:18,level:1,mics:4},
-{id:"music",name:"نغمات وذكريات",desc:"مساحة للموسيقى والحديث",emoji:"🎶",users:32,level:2,mics:6},
-{id:"arab",name:"ديوانية العرب",desc:"تعارف ونقاشات ممتعة",emoji:"🏜️",users:11,level:1,mics:4}
-];
-function showToast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>t.classList.remove("show"),2800)}
-function go(id){document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));document.getElementById(id).classList.add("active");document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.page===id));if(id==="rooms")renderRooms();window.scrollTo({top:0,behavior:"smooth"})}
-function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function roomCard(r){return `<div class="tile room"><div class="room-top"><span class="room-icon">${r.emoji}</span><span class="live">● غرفة صوتية</span></div><h3>${escapeHtml(r.name)}</h3><p>${escapeHtml(r.desc)}</p><div class="room-bottom"><span>👥 ${r.users} · 🎙️ ${r.mics} مايك</span><button class="btn" onclick="joinRoom('${r.id}')">دخول</button></div></div>`}
-function renderRooms(){document.getElementById("roomList").innerHTML=rooms.map(roomCard).join("");document.getElementById("homeRooms").innerHTML=rooms.slice(0,2).map(roomCard).join("");if(currentRoom)renderMics()}
-function createRoom(){const name=prompt("اكتب اسم الغرفة:");if(!name||!name.trim())return;const id="room"+(++roomCount);rooms.unshift({id,name:name.trim(),desc:"غرفة جديدة من إنشائك",emoji:"✨",users:1,level:1,mics:4});renderRooms();showToast("تم إنشاء غرفة تجريبية؛ لم تُحفظ على الخادم")}
-async function joinRoom(id){const r=rooms.find(x=>x.id===id);if(!r)return;if(liveKitRoom)await leaveRoom(false);currentRoom=r;document.getElementById("roomPanel").classList.remove("hidden");document.getElementById("roomTitle").textContent=r.emoji+" "+r.name;document.getElementById("roomMeta").textContent=`${r.users} مشارك · مستوى الدعم ${r.level}`;document.getElementById("roomChat").textContent="مرحباً بالجميع في الغرفة 👋";document.getElementById("micButton").disabled=true;document.getElementById("voiceStatus").textContent="جارٍ التحقق من تسجيل الدخول والاتصال...";renderMics();go("rooms");await connectLiveKit(r)}
-function addAudioTrack(track){if(!track||track.kind!=="audio")return;const el=track.attach();el.autoplay=true;el.muted=false;el.setAttribute("playsinline","");el.dataset.aboudswoAudio="true";document.body.appendChild(el);const p=el.play();if(p&&p.catch)p.catch(()=>showToast("اضغط على الشاشة للسماح بتشغيل صوت المشاركين"))}
-function removeAudioTrack(track) {
-  if (!track) return;
-  try {
-    track.detach().forEach(el => {
-      el.pause?.();
-      el.remove();
-    });
-  } catch (e) {
-    console.warn("تعذر إزالة مسار الصوت:", e);
-  }
+
+let coins=500,giftsSent=0,support=0,currentRoom=null,micOn=false,liveKitRoom=null,liveKitConnected=false,roomChatLines=[];
+let rooms=[];
+
+function showToast(msg){
+const t=document.getElementById("toast");
+t.textContent=msg;
+t.classList.add("show");
+clearTimeout(window.toastTimer);
+window.toastTimer=setTimeout(()=>t.classList.remove("show"),3500);
 }
-function renderMics(){const box=document.getElementById("micSlots");if(!box)return;if(!currentRoom){box.innerHTML="";return}const entries=[];if(liveKitRoom&&liveKitConnected){const local=liveKitRoom.localParticipant;entries.push({name:"أنت",mic:micOn,local:true});liveKitRoom.remoteParticipants.forEach(p=>{const hasAudio=[...p.audioTrackPublications.values()].some(pub=>pub.track);entries.push({name:p.name||p.identity||"مشارك",mic:hasAudio,local:false})})}else{entries.push({name:"أنت",mic:false,local:true})}if(!entries.length)entries.push({name:"أنت",mic:false,local:true});box.innerHTML=entries.map(x=>`<div class="mic"><strong>${x.mic?"🎤":"🔇"}</strong>${escapeHtml(x.name)}</div>`).join("")}
-async function connectLiveKit(r){try{const supabase=window.aboudswoSupabase;if(!supabase)throw new Error("لم يتم تحميل نظام تسجيل الدخول. حدّث الصفحة وحاول مجدداً.");const {data:sessionData,error:sessionError}=await supabase.auth.getSession();if(sessionError)throw sessionError;const session=sessionData&&sessionData.session;if(!session||!session.access_token)throw new Error("يجب تسجيل الدخول أولاً قبل دخول الغرف الصوتية.");if(!window.LivekitClient||!window.LivekitClient.Room)throw new Error("تعذر تحميل مكتبة الصوت LiveKit. تحقق من اتصال الإنترنت.");const res=await fetch(`${SERVER_URL}/getToken?room=${encodeURIComponent(r.id)}`,{method:"GET",headers:{Authorization:`Bearer ${session.access_token}`}});let result={};try{result=await res.json()}catch(e){}if(!res.ok)throw new Error(result.error||"الخادم لم يصدر رمز الدخول ("+res.status+")");if(!result.token)throw new Error(result.error||"لم يصل رمز الدخول من الخادم.");const room=new window.LivekitClient.Room({adaptiveStream:true,dynacast:true});liveKitRoom=room;room.on(window.LivekitClient.RoomEvent.TrackSubscribed,(track,publication,participant)=>{if(track.kind==="audio")addAudioTrack(track);renderMics()});room.on(window.LivekitClient.RoomEvent.TrackUnsubscribed,(track)=>{removeAudioTrack(track);renderMics()});room.on(window.LivekitClient.RoomEvent.ParticipantConnected,renderMics);room.on(window.LivekitClient.RoomEvent.ParticipantDisconnected,renderMics);room.on(window.LivekitClient.RoomEvent.LocalTrackPublished,renderMics);room.on(window.LivekitClient.RoomEvent.LocalTrackUnpublished,renderMics);room.on(window.LivekitClient.RoomEvent.Disconnected,()=>{liveKitConnected=false;micOn=false;document.getElementById("micButton").textContent="🎤 تشغيل المايك";document.getElementById("micButton").disabled=true;document.getElementById("voiceStatus").textContent="انقطع الاتصال بالغرفة.";renderMics()});document.getElementById("voiceStatus").textContent="جارٍ الاتصال بغرفة الصوت...";await room.connect(LIVEKIT_URL,result.token);liveKitConnected=true;document.getElementById("micButton").disabled=false;document.getElementById("voiceStatus").textContent="متصل بالغرفة. اضغط تشغيل المايك واسمح باستخدام الميكروفون.";renderMics();showToast("تم الاتصال بالغرفة الصوتية")}
-catch(e){console.error("LiveKit connection error:",e);liveKitConnected=false;micOn=false;if(liveKitRoom){try{await liveKitRoom.disconnect()}catch(x){}liveKitRoom=null}document.getElementById("micButton").disabled=true;document.getElementById("voiceStatus").textContent="تعذر الاتصال: "+(e.message||"خطأ غير معروف");renderMics();showToast(e.message||"تعذر الاتصال بالغرفة")}}
-async function leaveRoom(showMessage=true){const room=liveKitRoom;liveKitRoom=null;liveKitConnected=false;micOn=false;if(room){try{await room.localParticipant.setMicrophoneEnabled(false)}catch(e){}try{await room.disconnect()}catch(e){console.warn(e)}}document.querySelectorAll('audio[data-aboudswo-audio="true"]').forEach(el=>{el.pause();el.remove()});currentRoom=null;document.getElementById("roomPanel").classList.add("hidden");document.getElementById("micButton").textContent="🎤 تشغيل المايك";document.getElementById("micButton").disabled=true;document.getElementById("voiceStatus").textContent="الصوت غير متصل.";renderMics();if(showMessage)showToast("خرجت من الغرفة")}
-async function toggleMic(){if(!currentRoom||!liveKitRoom||!liveKitConnected){showToast("اتصل بالغرفة أولاً");return}const button=document.getElementById("micButton"),next=!micOn;button.disabled=true;try{await liveKitRoom.localParticipant.setMicrophoneEnabled(next);micOn=next;button.textContent=micOn?"🔇 إيقاف المايك":"🎤 تشغيل المايك";document.getElementById("voiceStatus").textContent=micOn?"الميكروفون يعمل وصوتك يُبث في الغرفة.":"الميكروفون متوقف.";renderMics()}catch(e){console.error(e);showToast(e.message||"تعذر تشغيل الميكروفون. تحقق من الأذونات.");document.getElementById("voiceStatus").textContent="تعذر تغيير حالة الميكروفون: "+(e.message||"")}finally{button.disabled=!liveKitConnected}}
-function openGifts(){document.getElementById("giftModal").classList.add("show")}function closeGifts(){document.getElementById("giftModal").classList.remove("show")}
-function updateCoins(){["coinCount","shopCoins","profileCoins"].forEach(id=>document.getElementById(id).textContent=coins);document.getElementById("giftCount").textContent=giftsSent;document.getElementById("supportLevel").textContent=1+Math.floor(support/100)}
-function sendGift(name,emoji,cost){if(coins<cost){showToast("رصيدك التجريبي لا يكفي");return}coins-=cost;giftsSent++;support+=cost;updateCoins();closeGifts();const chat=document.getElementById("roomChat");chat.innerHTML+=`<p>${emoji} أرسلت هدية ${escapeHtml(name)} للغرفة!</p>`;if(currentRoom){currentRoom.level=1+Math.floor(support/100);currentRoom.mics=Math.min(12,4+Math.floor(support/100)*2);renderMics();document.getElementById("roomMeta").textContent=`${currentRoom.users} مشارك · مستوى الدعم ${currentRoom.level} · ${currentRoom.mics} مايكات (تجريبي)`}showToast("تم إرسال الهدية تجريبياً")}
-function buyGift(n,e,c){sendGift(n,e,c)}function supportRoom(){sendGift("دعم الغرفة","💛",10)}
-function sendRoomMessage(){const i=document.getElementById("roomMessage");if(!i.value.trim())return;const p=document.createElement("p");p.textContent="💬 أنت: "+i.value;document.getElementById("roomChat").append(p);i.value=""}
-function publishPost(){const t=document.getElementById("postText"),v=t.value.trim();if(!v)return;const d=document.createElement("div");d.className="card";d.style.marginBottom="10px";const h=document.createElement("p");h.textContent=v;d.innerHTML='<div class="feed-item"><div class="avatar">A</div><div><b>ضيف ABOUDSWO</b><div class="small">الآن</div></div></div>';d.append(h);const actions=document.createElement("div");actions.className="actions";actions.innerHTML='<button class="pill" onclick="showToast(\'إعجاب تجريبي\')">♡ إعجاب</button><button class="pill" onclick="showToast(\'التعليقات تحتاج قاعدة بيانات\')">تعليق</button>';d.append(actions);document.getElementById("posts").prepend(d);t.value="";showToast("نُشر محلياً في هذه الصفحة")}
-function sendDM(){const i=document.getElementById("dmInput"),v=i.value.trim();if(!v)return;const d=document.createElement("p");d.textContent="أنت: "+v;document.getElementById("dmChat").append(d);i.value=""}
-function addStory(){const t=prompt("اكتب نص قصتك:");if(!t)return;const b=document.createElement("button");b.className="story";b.textContent="✨";b.onclick=()=>showToast(t);document.getElementById("stories").append(b);showToast("أضيفت قصة تجريبية")}
-function writeStory(){const title=prompt("عنوان القصة:");if(!title)return;const body=prompt("اكتب بداية القصة:")||"";const d=document.createElement("div");d.className="card";d.style.marginTop="10px";d.innerHTML=`<span class="tag">من تأليف المجتمع</span><h3>${escapeHtml(title)}</h3><p>${escapeHtml(body)}</p>`;document.getElementById("storyList").prepend(d)}
-function playQuiz(){const q=[["ما عاصمة سوريا؟","دمشق"],["كم عدد أيام الأسبوع؟","7"],["ما الكوكب الأحمر؟","المريخ"]][Math.floor(Math.random()*3)];const a=prompt(q[0]);showToast(a&&a.trim()===q[1]?"إجابة صحيحة! 🎉":"الإجابة: "+q[1])}
-function rollDice(){document.getElementById("diceResult").textContent="🎲 "+(1+Math.floor(Math.random()*6))}
-function rps(){const a=["حجر ✊","ورقة ✋","مقص ✌️"];showToast("اختيارك: "+a[Math.floor(Math.random()*3)]+" — جولة تجريبية")}
-function loadAudio(){const u=document.getElementById("audioUrl").value.trim();if(!u)return showToast("أدخل رابط ملف صوتي أولاً");const p=document.getElementById("player");p.src=u;p.load();p.play().catch(()=>showToast("اضغط تشغيل من مشغل الصوت"))}
-function activateVip(){document.getElementById("vipStatus").textContent="تم تفعيل شارة VIP للعرض التجريبي";document.getElementById("vipBadge").textContent="⭐ VIP تجريبي";showToast("تم تفعيل VIP تجريبياً")}
-async function signOutFromApp(){if(liveKitRoom)await leaveRoom(false);const sb=window.aboudswoSupabase;if(!sb)return showToast("نظام الحساب غير جاهز");const {error}=await sb.auth.signOut();if(error)showToast(error.message);else showToast("تم تسجيل الخروج")}
-renderRooms();updateCoins();
+
+function go(id){
+document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+document.getElementById(id).classList.add("active");
+document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.page===id));
+if(id==="rooms")loadRooms();
+window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function escapeHtml(s){
+return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+function roomCard(r){
+return `<div class="tile room">
+<div class="room-top"><span class="room-icon">${escapeHtml(r.emoji)}</span><span class="live">● غرفة صوتية</span></div>
+<h3>${escapeHtml(r.name)}</h3>
+<p>${escapeHtml(r.desc)}</p>
+<div class="room-bottom">
+<span>👥 ${r.users} · 🎙️ ${r.mics} مايك</span>
+<button class="btn" onclick="joinRoom('${encodeURIComponent(r.id)}')">دخول</button>
+</div></div>`;
+}
+
+function renderRooms(){
+const roomList=document.getElementById("roomList");
+const homeRooms=document.getElementById("homeRooms");
+
+if(!rooms.length){
+roomList.innerHTML='<div class="card">لا توجد غرف حالياً. أنشئ أول غرفة في مجتمع ABOUDSWO 🎙️</div>';
+homeRooms.innerHTML='<div class="card">كن أول من ينشئ غرفة صوتية!</div>';
+return;
+}
+
+roomList.innerHTML=rooms.map(roomCard).join("");
+homeRooms.innerHTML=rooms.slice(0,2).map(roomCard).join("");
+
+if(currentRoom)renderMics();
+}
+
+async function loadRooms(){
+const sb=window.aboudswoSupabase;
+if(!sb)return;
+
+try{
+const {data,error}=await sb
+.from("aboudswo_rooms")
+.select("id,name,description,emoji,host_id,mic_limit,is_open,created_at")
+.eq("is_open",true)
+.order("created_at",{ascending:false});
+
+if(error)throw error;
+
+rooms=(data||[]).map(r=>({
+id:r.id,
+name:r.name,
+desc:r.description||"غرفة صوتية جديدة",
+emoji:r.emoji||"🎙️",
+users:0,
+level:1,
+mics:r.mic_limit||4,
+host_id:r.host_id
+}));
+
+renderRooms();
+
+}catch(error){
+console.error("Load rooms error:",error);
+showToast("تعذر تحميل الغرف: "+error.message);
+}
+}
+
+async function createRoom(){
+const name=prompt("اكتب اسم الغرفة:");
+if(!name||!name.trim())return;
+
+const sb=window.aboudswoSupabase;
+if(!sb){
+showToast("نظام الحساب لم يجهز بعد");
+return;
+}
+
+try{
+const {data:sessionData,error:sessionError}=await sb.auth.getSession();
+if(sessionError)throw sessionError;
+
+const user=sessionData?.session?.user;
+if(!user){
+showToast("يجب تسجيل الدخول أولاً");
+return;
+}
+
+const roomId="room-"+crypto.randomUUID();
+
+const {data,error}=await sb
+.from("aboudswo_rooms")
+.insert({
+id:roomId,
+name:name.trim(),
+description:"غرفة جديدة من إنشائك",
+emoji:"✨",
+host_id:user.id,
+mic_limit:4,
+is_open:true
+})
+.select()
+.single();
+
+if(error)throw error;
+
+rooms.unshift({
+id:data.id,
+name:data.name,
+desc:data.description||"غرفة جديدة",
+emoji:data.emoji||"✨",
+users:0,
+level:1,
+mics:data.mic_limit||4,
+host_id:data.host_id
+});
+
+renderRooms();
+showToast("تم إنشاء الغرفة وحفظها بنجاح 🎉");
+
+}catch(error){
+console.error("Create room error:",error);
+showToast("تعذر إنشاء الغرفة: "+(error.message||"خطأ غير معروف"));
+}
+}
+
+async function joinRoom(encodedId){
+const id=decodeURIComponent(encodedId);
+const r=rooms.find(x=>x.id===id);
+if(!r)return;
+
+if(liveKitRoom)await leaveRoom(false);
+
+currentRoom=r;
+document.getElementById("roomPanel").classList.remove("hidden");
+document.getElementById("roomTitle").textContent=r.emoji+" "+r.name;
+document.getElementById("roomMeta").textContent=`${r.users} مشارك · مستوى الدعم ${r.level}`;
+document.getElementById("roomChat").textContent="مرحباً بالجميع في الغرفة 👋";
+document.getElementById("micButton").disabled=true;
+document.getElementById("voiceStatus").textContent="جارٍ التحقق من تسجيل الدخول والاتصال...";
+renderMics();
+go("rooms");
+await connectLiveKit(r);
+}
+
+function addAudioTrack(track){
+if(!track||track.kind!=="audio")return;
+const el=track.attach();
+el.autoplay=true;
+el.muted=false;
+el.setAttribute("playsinline","");
+el.dataset.aboudswoAudio="true";
+document.body.appendChild(el);
+const p=el.play();
+if(p&&p.catch)p.catch(()=>showToast("اضغط على الشاشة للسماح بتشغيل صوت المشاركين"));
+}
+
+function removeAudioTrack(track){
+if(!track)return;
+try{
+track.detach().forEach(el=>{
+el.pause?.();
+el.remove();
+});
+}catch(e){console.warn("تعذر إزالة مسار الصوت:",e);}
+}
+
+function renderMics(){
+const box=document.getElementById("micSlots");
+if(!box)return;
+if(!currentRoom){box.innerHTML="";return;}
+const entries=[];
+
+if(liveKitRoom&&liveKitConnected){
+const local=liveKitRoom.localParticipant;
+entries.push({name:"أنت",mic:micOn,local:true});
+liveKitRoom.remoteParticipants.forEach(p=>{
+const hasAudio=[...p.audioTrackPublications.values()].some(pub=>pub.track);
+entries.push({name:p.name||p.identity||"مشارك",mic:hasAudio,local:false});
+});
+}else{
+entries.push({name:"أنت",mic:false,local:true});
+}
+
+box.innerHTML=entries.map(x=>`<div class="mic"><strong>${x.mic?"🎤":"🔇"}</strong>${escapeHtml(x.name)}</div>`).join("");
+}
+
+async function connectLiveKit(r){
+try{
+const supabase=window.aboudswoSupabase;
+if(!supabase)throw new Error("لم يتم تحميل نظام تسجيل الدخول. حدّث الصفحة وحاول مجدداً.");
+
+const {data:sessionData,error:sessionError}=await supabase.auth.getSession();
+if(sessionError)throw sessionError;
+
+const session=sessionData&&sessionData.session;
+if(!session||!session.access_token)throw new Error("يجب تسجيل الدخول أولاً قبل دخول الغرف الصوتية.");
+
+if(!window.LivekitClient||!window.LivekitClient.Room)throw new Error("تعذر تحميل مكتبة الصوت LiveKit. تحقق من اتصال الإنترنت.");
+
+const res=await fetch(`${SERVER_URL}/getToken?room=${encodeURIComponent(r.id)}`,{
+method:"GET",
+headers:{Authorization:`Bearer ${session.access_token}`}
+});
+
+let result={};
+try{result=await res.json();}catch(e){}
+
+if(!res.ok)throw new Error(result.error||"الخادم لم يصدر رمز الدخول ("+res.status+")");
+if(!result.token)throw new Error(result.error||"لم يصل رمز الدخول من الخادم.");
+
+const room=new window.LivekitClient.Room({adaptiveStream:true,dynacast:true});
+liveKitRoom=room;
+
+room.on(window.LivekitClient.RoomEvent.TrackSubscribed,(track)=>{
+if(track.kind==="audio")addAudioTrack(track);
+renderMics();
+});
+room.on(window.LivekitClient.RoomEvent.TrackUnsubscribed,(track)=>{
+removeAudioTrack(track);
+renderMics();
+});
+room.on(window.LivekitClient.RoomEvent.ParticipantConnected,renderMics);
+room.on(window.LivekitClient.RoomEvent.ParticipantDisconnected,renderMics);
+room.on(window.LivekitClient.RoomEvent.LocalTrackPublished,renderMics);
+room.on(window.LivekitClient.RoomEvent.LocalTrackUnpublished,renderMics);
+
+room.on(window.LivekitClient.RoomEvent.Disconnected,()=>{
+liveKitConnected=false;
+micOn=false;
+document.getElementById("micButton").textContent="🎤 تشغيل المايك";
+document.getElementById("micButton").disabled=true;
+document.getElementById("voiceStatus").textContent="انقطع الاتصال بالغرفة.";
+renderMics();
+});
+
+document.getElementById("voiceStatus").textContent="جارٍ الاتصال بغرفة الصوت...";
+await room.connect(LIVEKIT_URL,result.token);
+
+liveKitConnected=true;
+document.getElementById("micButton").disabled=false;
+document.getElementById("voiceStatus").textContent="متصل بالغرفة. اضغط تشغيل المايك واسمح باستخدام الميكروفون.";
+renderMics();
+showToast("تم الاتصال بالغرفة الصوتية");
+
+}catch(e){
+console.error("LiveKit connection error:",e);
+liveKitConnected=false;
+micOn=false;
+if(liveKitRoom){
+try{await liveKitRoom.disconnect();}catch(x){}
+liveKitRoom=null;
+}
+document.getElementById("micButton").disabled=true;
+document.getElementById("voiceStatus").textContent="تعذر الاتصال: "+(e.message||"خطأ غير معروف");
+renderMics();
+showToast(e.message||"تعذر الاتصال بالغرفة");
+}
+}
+
+async function leaveRoom(showMessage=true){
+const room=liveKitRoom;
+liveKitRoom=null;
+liveKitConnected=false;
+micOn=false;
+
+if(room){
+try{await room.localParticipant.setMicrophoneEnabled(false);}catch(e){}
+try{await room.disconnect();}catch(e){console.warn(e);}
+}
+
+document.querySelectorAll('audio[data-aboudswo-audio="true"]').forEach(el=>{
+el.pause();
+el.remove();
+});
+
+currentRoom=null;
+document.getElementById("roomPanel").classList.add("hidden");
+document.getElementById("micButton").textContent="🎤 تشغيل المايك";
+document.getElementById("micButton").disabled=true;
+document.getElementById("voiceStatus").textContent="الصوت غير متصل.";
+renderMics();
+if(showMessage)showToast("خرجت من الغرفة");
+}
+
+async function toggleMic(){
+if(!currentRoom||!liveKitRoom||!liveKitConnected){
+showToast("اتصل بالغرفة أولاً");
+return;
+}
+const button=document.getElementById("micButton");
+const next=!micOn;
+button.disabled=true;
+
+try{
+await liveKitRoom.localParticipant.setMicrophoneEnabled(next);
+micOn=next;
+button.textContent=micOn?"🔇 إيقاف المايك":"🎤 تشغيل المايك";
+document.getElementById("voiceStatus").textContent=micOn?"الميكروفون يعمل وصوتك يُبث في الغرفة.":"الميكروفون متوقف.";
+renderMics();
+}catch(e){
+console.error(e);
+showToast(e.message||"تعذر تشغيل الميكروفون. تحقق من الأذونات.");
+document.getElementById("voiceStatus").textContent="تعذر تغيير حالة الميكروفون: "+(e.message||"");
+}finally{
+button.disabled=!liveKitConnected;
+}
+}
+
+function openGifts(){document.getElementById("giftModal").classList.add("show");}
+function closeGifts(){document.getElementById("giftModal").classList.remove("show");}
+
+function updateCoins(){
+["coinCount","shopCoins","profileCoins"].forEach(id=>document.getElementById(id).textContent=coins);
+document.getElementById("giftCount").textContent=giftsSent;
+document.getElementById("supportLevel").textContent=1+Math.floor(support/100);
+}
+
+function sendGift(name,emoji,cost){
+if(coins<cost){showToast("رصيدك التجريبي لا يكفي");return;}
+coins-=cost;
+giftsSent++;
+support+=cost;
+updateCoins();
+closeGifts();
+
+const chat=document.getElementById("roomChat");
+chat.innerHTML+=`<p>${emoji} أرسلت هدية ${escapeHtml(name)} للغرفة!</p>`;
+
+if(currentRoom){
+currentRoom.level=1+Math.floor(support/100);
+currentRoom.mics=Math.min(12,4+Math.floor(support/100)*2);
+renderMics();
+document.getElementById("roomMeta").textContent=`${currentRoom.users} مشارك · مستوى الدعم ${currentRoom.level} · ${currentRoom.mics} مايكات (تجريبي)`;
+}
+showToast("تم إرسال الهدية تجريبياً");
+}
+
+function buyGift(n,e,c){sendGift(n,e,c);}
+function supportRoom(){sendGift("دعم الغرفة","💛",10);}
+
+function sendRoomMessage(){
+const i=document.getElementById("roomMessage");
+if(!i.value.trim())return;
+const p=document.createElement("p");
+p.textContent="💬 أنت: "+i.value;
+document.getElementById("roomChat").append(p);
+i.value="";
+}
+
+function publishPost(){
+const t=document.getElementById("postText");
+const v=t.value.trim();
+if(!v)return;
+
+const d=document.createElement("div");
+d.className="card";
+d.style.marginBottom="10px";
+
+const h=document.createElement("p");
+h.textContent=v;
+
+d.innerHTML='<div class="feed-item"><div class="avatar">A</div><div><b>ضيف ABOUDSWO</b><div class="small">الآن</div></div></div>';
+d.append(h);
+
+const actions=document.createElement("div");
+actions.className="actions";
+actions.innerHTML='<button class="pill" onclick="showToast(\'إعجاب تجريبي\')">♡ إعجاب</button><button class="pill" onclick="showToast(\'التعليقات تحتاج قاعدة بيانات\')">تعليق</button>';
+d.append(actions);
+
+document.getElementById("posts").prepend(d);
+t.value="";
+showToast("نُشر محلياً في هذه الصفحة");
+}
+
+function sendDM(){
+const i=document.getElementById("dmInput");
+const v=i.value.trim();
+if(!v)return;
+const d=document.createElement("p");
+d.textContent="أنت: "+v;
+document.getElementById("dmChat").append(d);
+i.value="";
+}
+
+function addStory(){
+const t=prompt("اكتب نص قصتك:");
+if(!t)return;
+const b=document.createElement("button");
+b.className="story";
+b.textContent="✨";
+b.onclick=()=>showToast(t);
+document.getElementById("stories").append(b);
+showToast("أضيفت قصة تجريبية");
+}
+
+function writeStory(){
+const title=prompt("عنوان القصة:");
+if(!title)return;
+const body=prompt("اكتب بداية القصة:")||"";
+const d=document.createElement("div");
+d.className="card";
+d.style.marginTop="10px";
+d.innerHTML=`<span class="tag">من تأليف المجتمع</span><h3>${escapeHtml(title)}</h3><p>${escapeHtml(body)}</p>`;
+document.getElementById("storyList").prepend(d);
+}
+
+function playQuiz(){
+const q=[["ما عاصمة سوريا؟","دمشق"],["كم عدد أيام الأسبوع؟","7"],["ما الكوكب الأحمر؟","المريخ"]][Math.floor(Math.random()*3)];
+const a=prompt(q[0]);
+showToast(a&&a.trim()===q[1]?"إجابة صحيحة! 🎉":"الإجابة: "+q[1]);
+}
+
+function rollDice(){document.getElementById("diceResult").textContent="🎲 "+(1+Math.floor(Math.random()*6));}
+function rps(){
+const a=["حجر ✊","ورقة ✋","مقص ✌️"];
+showToast("اختيارك: "+a[Math.floor(Math.random()*3)]+" — جولة تجريبية");
+}
+
+function loadAudio(){
+const u=document.getElementById("audioUrl").value.trim();
+if(!u)return showToast("أدخل رابط ملف صوتي أولاً");
+const p=document.getElementById("player");
+p.src=u;
+p.load();
+p.play().catch(()=>showToast("اضغط تشغيل من مشغل الصوت"));
+}
+
+function activateVip(){
+document.getElementById("vipStatus").textContent="تم تفعيل شارة VIP للعرض التجريبي";
+document.getElementById("vipBadge").textContent="⭐ VIP تجريبي";
+showToast("تم تفعيل VIP تجريبياً");
+}
+
+async function signOutFromApp(){
+if(liveKitRoom)await leaveRoom(false);
+const sb=window.aboudswoSupabase;
+if(!sb)return showToast("نظام الحساب غير جاهز");
+const {error}=await sb.auth.signOut();
+if(error)showToast(error.message);
+else showToast("تم تسجيل الخروج");
+}
+
+// تهيئة الصفحة بعد تحميل نظام الحساب
+updateCoins();
+
+window.addEventListener("aboudswo-ready",loadRooms);
+
+document.addEventListener("DOMContentLoaded",()=>{
+if(window.aboudswoSupabase)loadRooms();
+});
 </script>
+
 <script type="module" src="./auth.js"></script>
 </body>
 </html>
